@@ -4,10 +4,21 @@ filetype plugin on
 colorscheme gruvbox
 hi! LineNrBelow guifg=#a89984 guibg=NONE guisp=NONE gui=NONE
 hi! LineNrAbove guifg=#b0a390 guibg=NONE guisp=NONE gui=NONE
-
-syntax on
+" call s:HL('Cursor', s:none, s:none, s:inverse)
+" function! GruvboxHlsShowCursor()
+"   call s:HL('Cursor', s:bg0, s:hls_cursor)
+" endfunction
+" 
+" function! GruvboxHlsHideCursor()
+"   call s:HL('Cursor', s:none, s:none, s:inverse)
+" endfunction
+" "
+"   " Match paired bracket under the cursor
+"   call s:HL('MatchParen', s:none, s:bg3, s:bold)
 
 set termguicolors
+
+syntax on
 
 if executable('ag')
   " Use ag over grep
@@ -61,9 +72,14 @@ set list listchars=tab:>-,trail:Ħ
 " set completition opetions in insert mode
 set completeopt=longest,menuone
 
-set statusline=%<%f%h%m%r%=char=%b=0x%B\ \ %l,%c%V\ %P
+" set statusline=%<%f%h%m%r%=char=%b=0x%B\ \ %l,%c%V\ %P
+set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
 set laststatus=2
 
 set modeline
 set noequalalways
 set noswapfile
+
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '--ignore=node_modules', fzf#vim#with_preview(), <bang>0)
+
+let g:rustfmt_autosave = 1

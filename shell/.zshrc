@@ -1,6 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+zstyle ':omz:update' mode disabled
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="candy"
@@ -17,6 +18,7 @@ plugins=(
     git
     zsh-autosuggestions
     fzf
+    # fzf-tab
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -58,16 +60,29 @@ if [[ ! -z "$TMUX" ]]; then
   precmd_functions+=(tmux_title)
 fi
 
+alias htail='(sed -u 10q; tail -100)'
+alias ls='ls -F --color=always'
+alias ll='ls -lh --color=always'
 alias vim="nvim"
 alias v="nvim"
+function vd() {
+  if [[ "$#" != 0 ]]
+  then
+    v +"Git difftool -y $(git merge-base ${*} HEAD)"
+  else
+    v +"Git difftool -y $(git merge-base master HEAD)"
+  fi
+}
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# if [[ -f $HOME/.pyenv ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init - zsh)"
+# fi
 
 path=($path ~/go/go/bin ~/go/bin ~/.cargo/bin)
 
@@ -77,12 +92,14 @@ export FZF_DEFAULT_COMMAND="ag -i --nocolor --nogroup --hidden \
   --ignore .svn \
   --ignore .hg \
   --ignore .DS_Store \
+  --ignore go/pkg \
   --ignore \"**/*.pyc\" \
   --ignore .git5_specs \
   --ignore review \
   --ignore vendor \
   --ignore node_modules \
   -g ''"
+  # | sed -r 's|^(.*)(/[^/]*)$|\1\n\0|' | awk '!x[\$0]++' -" # Last part here makes sure that directories are shown in addition to files
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --bind 'alt-a:select-all,alt-d:deselect-all'"
@@ -90,14 +107,21 @@ export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --bind 'alt-a:select-all,alt-d:dese
 
 # Use fzf for gco if no arguments are set.
 # By default gco is an alias to git checkout.
-unalias gco
-gco() {
-  if [[ "$#" != 0 ]]
-  then
-    git checkout "${*}"
-  else
-    git branch | grep -v "^\*" | fzf --height=20% --reverse --info=inline | xargs git checkout
-  fi
-}
-compdef _git gco=git-checkout
+# unalias gco
+# gco() {
+#   if [[ "$#" != 0 ]]
+#   then
+#     git checkout "${*}"
+#   else
+#     git branch | grep -v "^\*" | fzf --height=20% --reverse --info=inline | xargs git checkout
+#   fi
+# }
+# compdef _git gco=git-checkout
+
+unalias gcm
+alias gcm="git checkout master"
+
+# Local only configuration.
+[ -f $HOME/.zsh/local.sh ] && source $HOME/.zsh/local.sh
+
 

@@ -25,9 +25,12 @@ Plugin 'hrsh7th/cmp-buffer'
 Plugin 'hrsh7th/cmp-path'
 Plugin 'hrsh7th/cmp-cmdline'
 Plugin 'hrsh7th/nvim-cmp'
+Plugin 'nvim-lua/plenary.nvim'
+Plugin 'petertriho/cmp-git'
 
 Plugin 'SirVer/ultisnips'
 Plugin 'quangnguyen30192/cmp-nvim-ultisnips'
+Plugin 'honza/vim-snippets'
 
 " Fast navigation
 Plugin 'smoka7/hop.nvim'
@@ -35,10 +38,21 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
-" TODO: Use dap instead of vimspector
-" Plugin 'mfussenegger/nvim-dap'
+Plugin 'mfussenegger/nvim-dap'
+Plugin 'nvim-neotest/nvim-nio'
+Plugin 'rcarriga/nvim-dap-ui'
 " Plugin 'mxsdev/nvim-dap-vscode-js'
-Plugin 'puremourning/vimspector'
+Plugin 'epheien/termdbg'
+
+Plugin 'nvim-treesitter/nvim-treesitter'
+
+Plugin 'stevearc/aerial.nvim'
+" Public archive
+" Plugin 'simrat39/symbols-outline.nvim'
+
+Plugin 'nvim-lua/lsp-status.nvim'
+Plugin 'ldelossa/litee.nvim'
+Plugin 'ldelossa/litee-calltree.nvim'
 
 call vundle#end()
 
