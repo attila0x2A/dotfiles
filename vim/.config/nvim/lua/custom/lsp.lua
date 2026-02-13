@@ -51,7 +51,7 @@ function M.setup()
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-  vim.lsp.config('ts_ls', {
+  vim.lsp.config['ts_ls'] = {
     capabilities = capabilities,
     init_options = {
       hostInfo = 'neovim',
@@ -62,9 +62,9 @@ function M.setup()
         description = "Rename File"
       },
     }
-  })
+  }
 
-  vim.lsp.config('eslint', {
+  vim.lsp.config['eslint'] = {
     capabilities = capabilities,
     cmd = { 'vscode-eslint-language-server', '--stdio', '--max_old_space_size=16096' },
     settings = {
@@ -78,7 +78,7 @@ function M.setup()
     --     command = "EslintFixAll",
     --   })
     -- end,
-  })
+  }
 
   local prettier = {
     formatCommand = 'prettierd "${INPUT}"',
@@ -88,7 +88,7 @@ function M.setup()
     },
   }
 
-  vim.lsp.config('rust_analyzer', {
+  vim.lsp.config['rust_analyzer'] = {
     settings = {
       ['rust-analyzer'] = {
         -- https://rust-analyzer.github.io/book/configuration.html
@@ -143,10 +143,13 @@ function M.setup()
     -- on_attach = function(_client, bufnr)
     --     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     -- end
-  });
+  }
   vim.lsp.enable('rust_analyzer');
 
-  vim.lsp.config('lua_ls', {
+  vim.lsp.config['lua_ls'] = {
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+
     on_init = function(client)
       if client.workspace_folders then
         local path = client.workspace_folders[1].name
@@ -181,10 +184,10 @@ function M.setup()
     settings = {
       Lua = {}
     }
-  })
+  }
   vim.lsp.enable('lua_ls');
 
-  vim.lsp.config('efm', {
+  vim.lsp.config['efm'] = {
     capabilities = capabilities,
     init_options = { documentFormatting = true },
     settings = {
@@ -201,15 +204,16 @@ function M.setup()
       }
     },
     filetypes = { 'javascript', 'typescript', 'typescriptreact' },
-  })
+  }
 
-  vim.lsp.config('beancount', {
+  vim.lsp.config['beancount'] = {
     capabilities = capabilities,
     init_options = {
       -- journal_file = "<path to journal file>",
       pythonPath = "/home/attila/.pyenv/shims/python3",
     },
-  });
+  }
+  vim.lsp.enable('beancount');
 
   -- lspconfig.pylsp.setup {};
 

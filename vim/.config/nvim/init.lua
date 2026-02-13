@@ -153,24 +153,7 @@ require('custom.dap').setup()
 
 require('hop').setup()
 
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua", "toml" },
-  sync_install = false,
-  ignore_install = { "rust" },
-  auto_install = true,
-  modules = {},
-
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting=false,
-  },
-  ident = { enable = true },
-  rainbow = {
-    enable = true,
-    extended_mode = true,
-    max_file_lines = nil,
-  }
-}
+-- require('nvim-treesitter').install { 'rust', 'lua', 'toml' }
 
 require("aerial").setup({
   backends = { "lsp", "treesitter" },
