@@ -1,33 +1,43 @@
 ## Installation
 
-1. Install stow
+```shell
+curl -fsSL https://raw.githubusercontent.com/attila0x2A/dotfiles/main/install.sh | bash
+```
 
-1. Install zsh plugins:
+This installs and configures everything. Safe to re-run any time.
 
-    ```sheell
+<details>
+<summary>Manual install (if you'd rather not pipe a script to bash)</summary>
+
+1. Install stow, neovim, fzf, and ag (e.g. `brew install stow neovim fzf
+   the_silver_searcher` on macOS, or the equivalent apt packages on Linux).
+
+1. Install oh-my-zsh and zsh-autosuggestions:
+
+    ```shell
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     ```
 
-1. Install fzf
-
-1. Install dotfiles
+1. Clone and stow:
 
     ```shell
-    cd ~
-    git clone --recursive https://github.com/Uran198/dotfiles.git
-    stow vim shell
+    git clone https://github.com/attila0x2A/dotfiles.git ~/dotfiles
+    cd ~/dotfiles
+    stow -R vim shell
     ```
 
-    Alternative to `--recursive`:
+1. Open `nvim` once to let `vim.pack` install the plugins.
 
-    ```shell
-    git clone https://github.com/Uran198/dotfiles.git
-    git submodule init
-    git submodule update
-    ```
+</details>
 
 ## Updating
+
+```shell
+./install.sh
+```
+
+or, if you just changed a dotfile and don't need to reinstall anything:
 
 ```shell
 stow -R vim shell
@@ -41,10 +51,4 @@ stow -R vim shell
 * To open terminal maximized run `exo-preferred-applications` and change
   TerminalEmulator to `/usr/bin/xfce4-terminal --maximize`
 
-* Download and install from [Skype.com](https://skype.com)
-
 * Download and install from [Dropbox.com](https://www.dropbox.com/install-linux)
-
-## TODO
-
-* Move to use ansible. (Experiment in a VM.)
