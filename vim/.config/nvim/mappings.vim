@@ -12,9 +12,9 @@ nnoremap <silent> <Leader>fh :History<CR>
 
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '--ignore=node_modules', fzf#vim#with_preview(), <bang>0)
 
-autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+autocmd CursorHold  <buffer> silent! lua vim.lsp.buf.document_highlight()
+autocmd CursorHoldI <buffer> silent! lua vim.lsp.buf.document_highlight()
+autocmd CursorMoved <buffer> silent! lua vim.lsp.buf.clear_references()
 
 
 nnoremap <silent><Leader><Leader> :nohls \| CloseFloatingWindows<CR>:LTClearJumpHL<CR>
