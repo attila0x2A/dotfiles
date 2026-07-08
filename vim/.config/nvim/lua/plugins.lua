@@ -60,6 +60,8 @@ vim.pack.add({
   -- Symbols / outline
   'https://github.com/stevearc/aerial.nvim',
   'https://github.com/nvim-lua/lsp-status.nvim',
+  'https://github.com/ldelossa/litee.nvim',
+  'https://github.com/ldelossa/litee-calltree.nvim',
 })
 
 -- Was `packadd! matchit` in the old plugins.vim.

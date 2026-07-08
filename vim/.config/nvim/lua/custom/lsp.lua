@@ -39,6 +39,16 @@ end
 
 
 function M.setup()
+  require('litee.lib').setup({
+      panel = {
+          orientation = "bottom",
+          panel_size = 15,
+      },
+  })
+  require('litee.calltree').setup({
+    no_hls = true,
+  })
+
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
   vim.lsp.config['ts_ls'] = {
