@@ -215,7 +215,8 @@ function M.setup()
   }
   vim.lsp.enable('beancount');
 
-  -- lspconfig.pylsp.setup {};
+  vim.lsp.config['pylsp'] = {};
+  vim.lsp.enable('pylsp');
 
   -- Use LspAttach autocommand to only map the following keys
   -- after the language server attaches to the current buffer
