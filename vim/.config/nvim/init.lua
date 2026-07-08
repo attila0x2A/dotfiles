@@ -26,9 +26,10 @@ end, { bang = true, nargs = 0 })
 
 vim.api.nvim_create_user_command('ToggleQuickFix', function()
   local quickfix_open = false
-  for _, win in pairs(vim.fn.getwininfo()) do
-    if win["quickfix"] == 1 then
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.fn.win_gettype(win) == "quickfix" then
       quickfix_open = true
+      break
     end
   end
   if quickfix_open then
