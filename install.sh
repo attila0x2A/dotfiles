@@ -35,7 +35,7 @@ pkg_install() {
       if command -v apt-get >/dev/null; then
         sudo apt-get update -qq && sudo apt-get install -y "$pkg"
       elif command -v apt-get >/dev/null; then
-        sudo pacman -Syu "$pkg"
+        sudo pacman -Sy && sudo pacman -S --noconfirm "$pkg"
       else
         warn "No supported package manager found for '$pkg'; install it manually."
         return 1
