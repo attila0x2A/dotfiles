@@ -89,6 +89,8 @@ function M.setup()
   }
 
   vim.lsp.config['rust_analyzer'] = {
+    cmd = { 'rust-analyzer' },
+    filetypes = { 'rust' },
     settings = {
       ['rust-analyzer'] = {
         -- https://rust-analyzer.github.io/book/configuration.html
@@ -205,6 +207,8 @@ function M.setup()
   }
 
   vim.lsp.config['beancount'] = {
+    filetypes = { 'beancount' },
+    cmd = { 'beancount-language-server' },
     capabilities = capabilities,
     init_options = {
       -- journal_file = "<path to journal file>",
@@ -213,7 +217,10 @@ function M.setup()
   }
   vim.lsp.enable('beancount');
 
-  vim.lsp.config['pylsp'] = {};
+  vim.lsp.config['pylsp'] = {
+    cmd = { 'pylsp' },
+    filetypes = { 'python' },
+  };
   vim.lsp.enable('pylsp');
 
   -- Use LspAttach autocommand to only map the following keys
