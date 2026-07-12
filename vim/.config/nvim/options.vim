@@ -48,8 +48,6 @@ set wildmode=longest,list,full " Make <Tab> behave more bash-like
 set ignorecase                 " ignore case while searching
 set smartcase                  " ignore case if search pattern is all lowercase, case-sensitive otherwise
 set autoread                   " automaticaly reread files change outside vim
-set undofile                   " save undo tree when unloading buffers
-set undodir=~/.vimundo         " here undo files will be placed
 set undolevels=10000            " set maximum number of changes than can be undone
 set autowrite                  " save file on external commands
 
