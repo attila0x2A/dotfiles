@@ -12,7 +12,6 @@ vim.pack.add({
   -- Git integration
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/tpope/vim-rhubarb',
-  'https://github.com/will133/vim-dirdiff',
 
   -- Filetypes
   'https://github.com/nathangrigg/vim-beancount',
