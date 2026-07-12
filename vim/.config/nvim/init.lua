@@ -158,11 +158,13 @@ require('nvim-treesitter').install(
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'rust', 'lua', 'python', 'toml' },
   callback = function()
-    vim.treesitter.start()
-    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    vim.wo.foldmethod = 'expr'
-    vim.wo.foldlevel = 99
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    vim.schedule(function()
+      vim.treesitter.start()
+      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.wo.foldmethod = 'expr'
+      vim.wo.foldlevel = 99
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end)
   end,
 })
 
