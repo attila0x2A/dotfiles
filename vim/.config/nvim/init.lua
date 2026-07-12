@@ -158,9 +158,10 @@ require('nvim-treesitter').install({
   'python',
   'toml',
   'beancount',
-  'jsx',
   'javascript',
   'typescript',
+  'jsx',
+  'tsx',
   'html',
   'json'
 });
