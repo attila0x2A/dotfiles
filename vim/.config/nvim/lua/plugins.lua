@@ -13,9 +13,6 @@ vim.pack.add({
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/tpope/vim-rhubarb',
 
-  -- LSP
-  -- 'https://github.com/ray-x/lsp_signature.nvim',
-
   -- Colorscheme
   'https://github.com/morhetz/gruvbox',
 
@@ -46,8 +43,9 @@ vim.pack.add({
   -- Treesitter
   'https://github.com/nvim-treesitter/nvim-treesitter',
 
-  -- Symbols / outline
+  -- Outline
   'https://github.com/stevearc/aerial.nvim',
+  -- Call tree
   'https://github.com/ldelossa/litee.nvim',
   'https://github.com/ldelossa/litee-calltree.nvim',
 })
