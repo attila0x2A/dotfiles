@@ -18,7 +18,7 @@ vim.pack.add({
   'https://github.com/peitalin/vim-jsx-typescript',
 
   -- LSP
-  'https://github.com/ray-x/lsp_signature.nvim',
+  -- 'https://github.com/ray-x/lsp_signature.nvim',
 
   -- Colorscheme
   'https://github.com/morhetz/gruvbox',

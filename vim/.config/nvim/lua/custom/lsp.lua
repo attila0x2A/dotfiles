@@ -262,11 +262,6 @@ function M.setup()
   vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-
-  -- TODO: Figure out configuration, possibly get rid of or replace with something else.
-  require "lsp_signature".setup({
-    floating_window = true,
-  })
 end
 
 return M
