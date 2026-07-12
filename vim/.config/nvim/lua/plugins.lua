@@ -33,11 +33,6 @@ vim.pack.add({
   'https://github.com/nvim-lua/plenary.nvim',
   'https://github.com/petertriho/cmp-git',
 
-  -- Snippets
-  'https://github.com/SirVer/ultisnips',
-  'https://github.com/quangnguyen30192/cmp-nvim-ultisnips',
-  'https://github.com/honza/vim-snippets',
-
   -- Fast navigation
   'https://github.com/smoka7/hop.nvim',
   'https://github.com/tpope/vim-unimpaired',
