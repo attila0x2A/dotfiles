@@ -58,3 +58,19 @@ vim.pack.add({
 
 -- Was `packadd! matchit` in the old plugins.vim.
 vim.cmd('packadd! matchit')
+
+
+-- Remove non-active plugins
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.schedule(function()
+      local stale = vim.iter(vim.pack.get())
+        :filter(function(x) return not x.active end)
+        :map(function(x) return x.spec.name end)
+        :totable()
+      if next(stale) ~= nil then
+        vim.pack.del(stale)
+      end
+    end)
+  end,
+})
