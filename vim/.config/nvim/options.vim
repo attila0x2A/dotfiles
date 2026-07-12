@@ -34,7 +34,6 @@ set shiftwidth=2               " An indent is X spaces
 set smarttab                   " Indent instead of tab at start of line
 set shiftround                 " Round spaces to nearest shiftwidth multiple
 set nojoinspaces               " Don't convert spaces to tabs
-set autoindent                 " automatic indentation
 
 set history=10000              " keep X lines of command line history
 set nobackup                   " do not keep a backup file
