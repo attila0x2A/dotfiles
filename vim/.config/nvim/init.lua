@@ -156,7 +156,7 @@ require('nvim-treesitter').install(
   { 'rust', 'lua', 'python', 'toml' }
 );
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'rust', 'lua', 'python', 'toml' },
+  pattern = { '*.rust', '*.lua', '*.python', '*.toml' },
   callback = function()
     vim.schedule(function()
       vim.treesitter.start()
