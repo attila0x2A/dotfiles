@@ -1,1 +1,0 @@
-nnoremap gr :GoReferrers<CR>

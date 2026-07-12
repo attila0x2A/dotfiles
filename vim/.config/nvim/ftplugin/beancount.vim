@@ -1,4 +1,3 @@
-
 setl softtabstop=2 shiftwidth=2 tabstop=2
 setl softtabstop=2 shiftwidth=2 tabstop=2
 
