@@ -171,6 +171,19 @@ vim.filetype.add({
   }
 })
 vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'rust',
+    'lua',
+    'python',
+    'toml',
+    'beancount',
+    'javascript',
+    'typescript',
+    'jsx',
+    'tsx',
+    'html',
+    'json',
+  };
   callback = function()
     vim.schedule(function()
       vim.treesitter.start()
