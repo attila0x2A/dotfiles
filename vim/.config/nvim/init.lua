@@ -152,18 +152,35 @@ require('custom.dap').setup()
 
 require('hop').setup()
 
-require('nvim-treesitter').install(
-  { 'rust', 'lua', 'python', 'toml' }
-);
+require('nvim-treesitter').install({
+  'rust',
+  'lua',
+  'python',
+  'toml',
+  'beancount',
+  'jsx',
+  'javascript',
+  'typescript',
+  'html',
+  'json'
+});
+vim.filetype.add({
+  extension = {
+    bean = 'beancount',
+  }
+})
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { '*.rust', '*.lua', '*.python', '*.toml' },
   callback = function()
     vim.schedule(function()
       vim.treesitter.start()
       vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
       vim.wo.foldmethod = 'expr'
-      vim.wo.foldlevel = 99
       vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      if vim.bo.filetype == 'beancount' then
+        vim.wo.foldlevel = 0
+      else
+        vim.wo.foldlevel = 99
+      end
     end)
   end,
 })

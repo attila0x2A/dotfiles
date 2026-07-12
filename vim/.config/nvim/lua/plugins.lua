@@ -13,10 +13,6 @@ vim.pack.add({
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/tpope/vim-rhubarb',
 
-  -- Filetypes
-  'https://github.com/nathangrigg/vim-beancount',
-  'https://github.com/peitalin/vim-jsx-typescript',
-
   -- LSP
   -- 'https://github.com/ray-x/lsp_signature.nvim',
 
