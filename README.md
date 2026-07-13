@@ -6,42 +6,67 @@ curl -fsSL https://raw.githubusercontent.com/attila0x2A/dotfiles/main/install.sh
 
 This installs and configures everything. Safe to re-run any time.
 
-<details>
-<summary>Manual install (if you'd rather not pipe a script to bash)</summary>
-
-1. Install stow, neovim, fzf, and ag (e.g. `brew install stow neovim fzf
-   the_silver_searcher` on macOS, or the equivalent apt packages on Linux).
-
-1. Install oh-my-zsh and zsh-autosuggestions:
-
-    ```shell
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    ```
-
-1. Clone and stow:
-
-    ```shell
-    git clone https://github.com/attila0x2A/dotfiles.git ~/dotfiles
-    cd ~/dotfiles
-    stow -R vim shell
-    ```
-
-1. Open `nvim` once to let `vim.pack` install the plugins.
-
-</details>
-
 ## Updating
 
 ```shell
 ./install.sh
 ```
 
-or, if you just changed a dotfile and don't need to reinstall anything:
+## Agent setup
 
-```shell
-stow -R vim shell
-```
+1. Create a dedicated user:
+   ```shell
+   sudo useradd -m -s /usr/bin/bash aiagent
+   sudo passwd -l aiagent
+   sudo usermod --add-subuids 200000-265535 --add-subgids 200000-265535 aiagent
+   sudo loginctl enable-linger aiagent
+   ```
+
+   Verify:
+   ```shell
+   grep aiagent /etc/subuid /etc/subgid
+   ```
+
+1. Rootless Podman for `aiagent`
+   ```shell
+   sudo machinectl shell aiagent@
+   # --- now inside a shell as aiagent ---
+   podman system migrate
+   podman info --format '{{.Host.Security.Rootless}}'   # must print "true"
+   exit
+   ```
+
+1. Setup secrets for `aiagent`
+   ```shell
+   sudo machinectl shell aiagent@
+   # --- as aiagent ---
+   gpg --quick-gen-key "aiagent@localhost" default default never
+   pass init "aiagent@localhost"
+   pass insert deepseek/opencode-api-key
+   exit
+   ```
+
+1. Give access to the configuration (may need to be re-run when any of the files
+   changes, since editor may replace inode)
+   ```shell
+   setfacl -m u:aiagent:x ~
+   setfacl -m u:aiagent:x ~/.config
+   setfacl -m u:aiagent:x ~/.config/opencode
+   setfacl -m u:aiagent:r ~/.config/opencode/opencode.json
+   setfacl -m u:aiagent:x ~/.config/opencode-sandbox
+   setfacl -m u:aiagent:r ~/.config/opencode-sandbox/squid.conf
+   setfacl -m u:aiagent:r ~/.config/opencode-sandbox/Containerfile
+   ```
+
+1. Build opencode-sandbox image
+    ```shell
+    sudo machinectl shell --setenv="HOST_HOME=${HOME}" aiagent@
+    podman build -t opencode-sandbox \
+      -f "${HOST_HOME}/.config/opencode-sandbox/Containerfile" \
+      "${HOST_HOME}/.config/opencode-sandbox"
+    exit
+    ```
+
 
 ## Additional configurations
 

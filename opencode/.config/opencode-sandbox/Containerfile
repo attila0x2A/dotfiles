@@ -1,0 +1,5 @@
+FROM archlinux:latest
+RUN pacman -Syu --noconfirm opencode git openssh ca-certificates && \
+    pacman -Scc --noconfirm
+WORKDIR /workspace
+ENTRYPOINT ["opencode"]

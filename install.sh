@@ -29,13 +29,13 @@ pkg_install() {
         warn "Homebrew not found; install it from https://brew.sh first."
         return 1
       }
-      brew install "$pkg"
+      brew install $pkg
       ;;
     Linux)
       if command -v apt-get >/dev/null; then
         sudo apt-get update -qq && sudo apt-get install -y "$pkg"
-      elif command -v apt-get >/dev/null; then
-        sudo pacman -Sy && sudo pacman -S --noconfirm "$pkg"
+      elif command -v pacman >/dev/null; then
+        sudo pacman -Sy && sudo pacman -S --noconfirm $pkg
       else
         warn "No supported package manager found for '$pkg'; install it manually."
         return 1
@@ -49,7 +49,9 @@ pkg_install() {
 }
 
 require_cmd() {
-  local cmd="$1" pkg="${2:-$1}"
+  local cmd="$1"
+  shift
+  local pkg="${@:-$cmd}"
   if command -v "$cmd" >/dev/null 2>&1; then
     log "$cmd already installed, skipping."
   else
@@ -64,6 +66,9 @@ require_cmd() {
 require_cmd stow
 require_cmd nvim neovim
 require_cmd fzf
+require_cmd gitleaks
+require_cmd opencode
+require_cmd podman podman slirp4netns fuse-overlayfs shadow acl pass gnupg
 
 # ---------------------------------------------------------------------------
 # oh-my-zsh + zsh-autosuggestions
@@ -98,9 +103,9 @@ fi
 # ---------------------------------------------------------------------------
 # Stow
 # ---------------------------------------------------------------------------
-log "Stowing vim and shell..."
+log "Stowing..."
 cd "$DOTFILES_DIR"
-stow -R vim shell
+stow -R vim shell opencode
 
 # ---------------------------------------------------------------------------
 # Trigger Neovim's plugin install (vim.pack.add in lua/plugins.lua runs

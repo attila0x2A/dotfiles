@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+AGENT_USER="aiagent"
+SANDBOX_CFG="$HOME/.config/opencode-sandbox"
+IMAGE="opencode-sandbox"
+PROXY_NAME="opencode-egress-proxy"
+NETWORK="opencode-net"
+WORKDIR="$(realpath "${1:-$PWD}")"
+
+runas() {
+  sudo -u "$AGENT_USER" env XDG_RUNTIME_DIR="/run/user/$(id -u "$AGENT_USER")" "$@"
+}
+
+# Idempotent: create the shared egress network + proxy if missing
+runas podman network exists "$NETWORK" 2>/dev/null || runas podman network create "$NETWORK"
+runas podman container exists "$PROXY_NAME" 2>/dev/null || runas podman run -d \
+  --name "$PROXY_NAME" --network "$NETWORK" \
+  -v "$SANDBOX_CFG/squid.conf:/etc/squid/squid.conf:ro" \
+  docker.io/ubuntu/squid
+
+runas bash -c "
+  DEEPSEEK_API_KEY=\$(pass show deepseek/opencode-api-key)
+  podman run --rm -it \
+    --userns=keep-id \
+    --network '$NETWORK' \
+    --cap-drop=ALL \
+    --security-opt no-new-privileges \
+    --memory=4g --cpus=2 --pids-limit=512 \
+    --read-only \
+    --mount type=tmpfs,target=/tmp,U=true \
+    --mount type=tmpfs,target=/home/${AGENT_USER},U=true \
+    -e HTTPS_PROXY=http://$PROXY_NAME:3128 \
+    -e HTTP_PROXY=http://$PROXY_NAME:3128 \
+    -e DEEPSEEK_API_KEY="\${DEEPSEEK_API_KEY}" \
+    -v '$WORKDIR':/workspace \
+    -v '$HOME/.config/opencode/opencode.json':/home/${AGENT_USER}/.config/opencode/opencode.json:ro \
+    '$IMAGE'
+"

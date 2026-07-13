@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+AGENT_USER="aiagent"
+
+if [ $# -lt 1 ] || [ -z "$1" ]; then
+    echo "Error: Target directory argument is required." >&2
+    echo "Usage: $0 <target_directory>" >&2
+    exit 1
+fi
+TARGET_DIR="$1"
+
+if [ ! -d "$TARGET_DIR" ]; then
+    echo "Error: Directory '$TARGET_DIR' does not exist." >&2
+    exit 1
+fi
+
+WORKDIR="$(realpath "$TARGET_DIR")"
+echo "Granting $AGENT_USER rwx access to $WORKDIR..."
+
+setfacl -R -m u:"$AGENT_USER":rwx "$WORKDIR"
+setfacl -R -d -m u:"$AGENT_USER":rwx "$WORKDIR"
