@@ -6,13 +6,20 @@ SANDBOX_CFG="$HOME/.config/opencode-sandbox"
 IMAGE="opencode-sandbox"
 PROXY_NAME="opencode-egress-proxy"
 NETWORK="opencode-net"
-WORKDIR="$(realpath "${1:-$PWD}")"
+OC_DATA="$SANDBOX_CFG/data"
 
 runas() {
   sudo -u "$AGENT_USER" env XDG_RUNTIME_DIR="/run/user/$(id -u "$AGENT_USER")" "$@"
 }
 
-# Idempotent: create the shared egress network + proxy if missing
+# Safely quote user args to prevent injection into inner bash
+OC_ARGS=""
+if [ $# -gt 0 ]; then
+  printf -v OC_ARGS '%q ' "$@"
+  OC_ARGS="${OC_ARGS% }"
+fi
+
+runas mkdir -p "$OC_DATA"
 runas podman network exists "$NETWORK" 2>/dev/null || runas podman network create "$NETWORK"
 runas podman container exists "$PROXY_NAME" 2>/dev/null || runas podman run -d \
   --name "$PROXY_NAME" --network "$NETWORK" \
@@ -33,7 +40,12 @@ runas bash -c "
     -e HTTPS_PROXY=http://$PROXY_NAME:3128 \
     -e HTTP_PROXY=http://$PROXY_NAME:3128 \
     -e DEEPSEEK_API_KEY="\${DEEPSEEK_API_KEY}" \
-    -v '$WORKDIR':/workspace \
-    -v '$HOME/.config/opencode/opencode.json':/home/${AGENT_USER}/.config/opencode/opencode.json:ro \
-    '$IMAGE'
+    -e XDG_STATE_HOME=/tmp/opencode-state \
+    -e XDG_CONFIG_HOME=/home/${AGENT_USER}/.config \
+    -e XDG_CACHE_HOME=/tmp/opencode-cache \
+    -v '$PWD':/workspace \
+    -v '$HOME/.config/opencode/opencode.json:/home/${AGENT_USER}/.config/opencode/opencode.json:ro' \
+    -v '$HOME/.config/opencode/skills:/home/${AGENT_USER}/.config/opencode/skills:ro' \
+    -v '$OC_DATA:/home/${AGENT_USER}/.local/share/opencode' \
+    '$IMAGE' ${OC_ARGS:+ }${OC_ARGS}
 "

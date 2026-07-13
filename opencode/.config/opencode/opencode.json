@@ -1,5 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "deepseek/deepseek-v4-pro",
+  "small_model": "deepseek/deepseek-v4-flash",
+  "logLevel": "INFO",
+  "compaction": {
+    "auto": true,
+    "tail_turns": 15,
+    "prune": true
+  },
   "permission": {
     "*": "ask",
     "bash": {
@@ -9,9 +17,11 @@
       "git log*": "allow",
       "rm -rf *": "deny",
       "sudo *": "deny",
-      "curl * | *": "deny"
+      "curl * | *": "deny",
+      "git push*": "deny"
     },
     "edit": "ask",
+    "write": "ask",
     "read": {
       "*": "allow",
       "*.env": "deny",
@@ -22,10 +32,16 @@
       "id_ed25519*": "deny",
       ".ssh/**": "deny",
       ".aws/**": "deny",
-      ".gnupg/**": "deny"
+      ".gnupg/**": "deny",
+      "**/secrets/**": "deny",
+      "**/credentials/**": "deny",
+      ".netrc": "deny",
+      ".git-credentials": "deny",
+      ".git/config": "deny"
     },
     "external_directory": {
-      "*": "deny",
+      "/tmp/opencode/**": "allow",
+      "*": "deny"
     },
     "webfetch": "ask"
   },
