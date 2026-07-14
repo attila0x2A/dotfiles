@@ -46,8 +46,6 @@ function M.setup()
 
   vim.opt.equalalways = false
   vim.opt.swapfile = false
-
-  vim.g.rustfmt_autosave = 1
 end
 
 return M
