@@ -35,9 +35,6 @@ vim.pack.add({
   'https://github.com/junegunn/fzf.vim',
 
   -- Debugging
-  'https://github.com/mfussenegger/nvim-dap',
-  'https://github.com/nvim-neotest/nvim-nio',
-  'https://github.com/rcarriga/nvim-dap-ui',
   'https://github.com/epheien/termdbg',
 
   -- Treesitter

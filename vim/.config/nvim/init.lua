@@ -147,8 +147,6 @@ vim.g.typescript_indent_disable = 1
 require('custom.lsp').setup()
 -- lua/custom/cmp.lua
 require('custom.cmp').setup()
--- lua/custom/dap.lua
-require('custom.dap').setup()
 
 require('hop').setup()
 
