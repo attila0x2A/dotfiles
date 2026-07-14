@@ -235,14 +235,17 @@ function M.setup()
         vim.cmd [[write]]
       end, opts)
 
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = ev.buf,
-        callback = function() vim.lsp.buf.document_highlight() end,
-      })
-      vim.api.nvim_create_autocmd('CursorMoved', {
-        buffer = ev.buf,
-        callback = function() vim.lsp.buf.clear_references() end,
-      })
+      local client = vim.lsp.get_client_by_id(ev.data.client_id)
+      if client and client:supports_method('textDocument/documentHighlight') then
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+          buffer = ev.buf,
+          callback = function() vim.lsp.buf.document_highlight() end,
+        })
+        vim.api.nvim_create_autocmd('CursorMoved', {
+          buffer = ev.buf,
+          callback = function() vim.lsp.buf.clear_references() end,
+        })
+      end
     end,
   })
 
