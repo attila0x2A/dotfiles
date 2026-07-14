@@ -139,8 +139,6 @@ vim.g.python3_host_prog = '/usr/bin/python3'
 
 -- lua/custom/lsp.lua
 require('custom.lsp').setup()
--- lua/custom/cmp.lua
-require('custom.cmp').setup()
 
 require('hop').setup()
 

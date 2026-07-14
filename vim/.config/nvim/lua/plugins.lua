@@ -16,14 +16,6 @@ vim.pack.add({
   -- Colorscheme
   'https://github.com/morhetz/gruvbox',
 
-  -- Completion
-  'https://github.com/hrsh7th/cmp-nvim-lsp',
-  'https://github.com/hrsh7th/cmp-buffer',
-  'https://github.com/hrsh7th/cmp-path',
-  'https://github.com/hrsh7th/cmp-cmdline',
-  'https://github.com/hrsh7th/nvim-cmp',
-  'https://github.com/petertriho/cmp-git',
-
   -- Fast navigation
   'https://github.com/smoka7/hop.nvim',
   'https://github.com/tpope/vim-unimpaired',

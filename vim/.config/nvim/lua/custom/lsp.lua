@@ -49,10 +49,7 @@ function M.setup()
     no_hls = true,
   })
 
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
   vim.lsp.config['ts_ls'] = {
-    capabilities = capabilities,
     init_options = {
       hostInfo = 'neovim',
     },
@@ -148,7 +145,6 @@ function M.setup()
     },
   }
   vim.lsp.config['efm'] = {
-    capabilities = capabilities,
     init_options = { documentFormatting = true },
     settings = {
       rootMarkers = { ".git/" },
@@ -169,7 +165,6 @@ function M.setup()
   vim.lsp.config['beancount'] = {
     filetypes = { 'beancount' },
     cmd = { 'beancount-language-server' },
-    capabilities = capabilities,
     init_options = {
       -- journal_file = "<path to journal file>",
       pythonPath = "/home/attila/.pyenv/shims/python3",
@@ -190,6 +185,35 @@ function M.setup()
     callback = function(ev)
       -- Enable completion triggered by <c-x><c-o>
       vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
+        autotrigger = true,
+        convert = function(item)
+          local text = nil
+          if item.textEdit and item.textEdit.newText then
+            text = item.textEdit.newText
+          elseif item.insertText then
+            text = item.insertText
+          end
+
+          if text then
+            text = text:gsub('%$%b{}', function(s)
+              return s:match('%${%d+:(.*)}') or ''
+            end):gsub('%$%d+', '')
+          else
+            text = item.label
+          end
+
+          return { abbr = text, menu = '' }
+        end,
+      })
+
+      -- Complete on each keystroke.
+      vim.api.nvim_create_autocmd('TextChangedI', {
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.completion.get()
+        end,
+      })
 
       -- Buffer local mappings.
       -- See `:help vim.lsp.*` for documentation on any of the below functions

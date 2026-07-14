@@ -56,9 +56,29 @@ function M.setup()
   vim.keymap.set('n', '<Leader>sfi', ':setl foldmethod=indent<CR>')
   vim.keymap.set('n', '<Leader>sfm', ':setl foldmethod=manual<CR>')
 
+  -- Completion: enter shouldn't select.
+  vim.keymap.set('i', '<CR>', function()
+    if vim.fn.pumvisible() == 1 then
+      return '<C-e><CR>'
+    end
+    return '<CR>'
+  end, { expr = true })
+
   -- Cmdline
   -- <C-A> to jump to the start, same as in terminal.
   vim.keymap.set('c', '<C-A>', '<C-B>')
+
+  -- Snippet navigation
+  vim.keymap.set({ 'i', 's' }, '<C-j>', function()
+    if vim.snippet.active() then
+      vim.snippet.jump(1)
+    end
+  end, { silent = true })
+  vim.keymap.set({ 'i', 's' }, '<C-k>', function()
+    if vim.snippet.active() then
+      vim.snippet.jump(-1)
+    end
+  end, { silent = true })
 
   -- Hop
   vim.keymap.set('n', '<leader>h', require('hop').hint_words, { silent = true })
