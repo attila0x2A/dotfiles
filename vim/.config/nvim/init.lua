@@ -127,7 +127,6 @@ function FindCargoPackage()
       else
         error(err)
       end
-      return
     end
     current_dir = vim.fn.fnamemodify(current_dir, ":h") -- Get parent directory
   end
