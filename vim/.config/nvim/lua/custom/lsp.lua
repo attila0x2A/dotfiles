@@ -1,12 +1,6 @@
 local M = {}
 
 function M.setup()
-  vim.lsp.config['ts_ls'] = {
-    init_options = {
-      hostInfo = 'neovim',
-    },
-  }
-
   vim.lsp.config['rust_analyzer'] = {
     cmd = { 'rust-analyzer' },
     filetypes = { 'rust' },
@@ -65,31 +59,6 @@ function M.setup()
     }
   }
   vim.lsp.enable('lua_ls');
-
-  local prettier = {
-    formatCommand = 'prettierd "${INPUT}"',
-    formatStdin = true,
-    env = {
-      'PRETTIERD_LOCAL_PRETTIER_ONLY=1',
-    },
-  }
-  vim.lsp.config['efm'] = {
-    init_options = { documentFormatting = true },
-    settings = {
-      rootMarkers = { ".git/" },
-      logFile = "/tmp/efm.log",
-      logLevel = 1,
-      languages = {
-        lua = {
-          { formatCommand = "lua-format -i", formatStdin = true }
-        },
-        javascript = { prettier },
-        typescript = { prettier },
-        typescriptreact = { prettier },
-      }
-    },
-    filetypes = { 'javascript', 'typescript', 'typescriptreact' },
-  }
 
   vim.lsp.config['beancount'] = {
     filetypes = { 'beancount' },
