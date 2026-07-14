@@ -22,7 +22,6 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-path',
   'https://github.com/hrsh7th/cmp-cmdline',
   'https://github.com/hrsh7th/nvim-cmp',
-  'https://github.com/nvim-lua/plenary.nvim',
   'https://github.com/petertriho/cmp-git',
 
   -- Fast navigation
