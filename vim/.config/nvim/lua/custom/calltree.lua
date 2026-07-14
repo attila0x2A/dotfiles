@@ -7,6 +7,7 @@
 ---@field calltree_buf integer
 ---@field augroup integer?
 ---@field encoding string
+---@field float_win integer?
 
 ---@class CallTreeNode
 ---@field item lsp.CallHierarchyItem
@@ -78,6 +79,49 @@ local function get_node_at_cursor()
   end
 
   return search(state.nodes)
+end
+
+local function close_float()
+  if not state then return end
+  if state.float_win and vim.api.nvim_win_is_valid(state.float_win) then
+    pcall(vim.api.nvim_win_close, state.float_win, true)
+  end
+  state.float_win = nil
+end
+
+local function float_preview(fname, lnum)
+  if not state then return end
+
+  if state.float_win and vim.api.nvim_win_is_valid(state.float_win) then
+    pcall(vim.api.nvim_win_close, state.float_win, true)
+  end
+
+  local preview_buf = vim.fn.bufadd(fname)
+  vim.fn.bufload(preview_buf)
+
+  local win = vim.api.nvim_open_win(preview_buf, false, {
+    relative = 'cursor',
+    width = math.min(80, vim.o.columns - 4),
+    height = math.min(20, vim.o.lines - 4),
+    row = 1,
+    col = 1,
+    style = 'minimal',
+    border = 'single',
+  })
+  state.float_win = win
+
+  vim.api.nvim_win_set_cursor(win, { lnum, 0 })
+  vim.wo[win].cursorline = true
+
+  vim.api.nvim_create_autocmd('CursorMoved', {
+    buffer = state.calltree_buf,
+    once = true,
+    callback = close_float,
+  })
+
+  for _, key in ipairs({ '<Esc>', 'q', '<CR>' }) do
+    vim.keymap.set('n', key, close_float, { buffer = preview_buf, nowait = true })
+  end
 end
 
 local function expand_node(node, callback)
@@ -226,6 +270,7 @@ local function setup_keymaps()
 
   vim.keymap.set('n', '<CR>', function()
     if not state then return end
+    close_float()
     local node = get_node_at_cursor()
     if not node then return end
     if not vim.api.nvim_win_is_valid(state.source_win) then return end
@@ -262,11 +307,12 @@ local function setup_keymaps()
       lnum = node.item.selectionRange.start.line + 1
     end
 
-    vim.cmd('pedit +' .. lnum .. ' ' .. vim.fn.fnameescape(fname))
+    float_preview(fname, lnum)
   end, opts)
 
   vim.keymap.set('n', 'g<CR>', function()
     if not state then return end
+    close_float()
     local node = get_node_at_cursor()
     if not node then return end
     if not vim.api.nvim_win_is_valid(state.source_win) then return end
@@ -292,7 +338,7 @@ local function setup_keymaps()
     local fname = vim.uri_to_fname(node.item.uri)
     local lnum = node.item.selectionRange.start.line + 1
 
-    vim.cmd('pedit +' .. lnum .. ' ' .. vim.fn.fnameescape(fname))
+    float_preview(fname, lnum)
   end, opts)
 
   vim.keymap.set('n', 'r', function()
