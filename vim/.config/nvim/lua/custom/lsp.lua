@@ -105,11 +105,12 @@ function M.setup()
         end,
       })
 
-      -- Complete on each keystroke.
-      vim.api.nvim_create_autocmd('TextChangedI', {
+      vim.api.nvim_create_autocmd('InsertCharPre', {
         buffer = ev.buf,
         callback = function()
-          vim.lsp.completion.get()
+          if vim.v.char:match('[a-zA-Z_]') then
+            vim.schedule(vim.lsp.completion.get)
+          end
         end,
       })
 
