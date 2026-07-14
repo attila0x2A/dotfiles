@@ -18,7 +18,7 @@ warn() { printf '\033[1;33m==>\033[0m %s\n' "$1" >&2; }
 OS="$(uname -s)"
 
 # ---------------------------------------------------------------------------
-# Package install helper: uses brew on macOS, apt on Debian/Ubuntu.
+# Package install helper: uses brew on macOS, pacman on Arch Linux.
 # Anything else gets a warning and a manual-install hint instead of failing.
 # ---------------------------------------------------------------------------
 pkg_install() {
@@ -31,10 +31,8 @@ pkg_install() {
       }
       brew install $pkg
       ;;
-    Linux)
-      if command -v apt-get >/dev/null; then
-        sudo apt-get update -qq && sudo apt-get install -y "$pkg"
-      elif command -v pacman >/dev/null; then
+      Linux)
+      if command -v pacman >/dev/null; then
         sudo pacman -Sy && sudo pacman -S --noconfirm $pkg
       else
         warn "No supported package manager found for '$pkg'; install it manually."

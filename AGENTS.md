@@ -11,7 +11,7 @@ Dotfiles managed via GNU stow. No build, test, or lint commands — this is not 
 
 - **Install/update**: `./install.sh` (idempotent, safe to re-run, uses `stow -R`)
 - **Default checkout path**: `~/dotfiles` (override via `DOTFILES_DIR` env var)
-- `install.sh` handles macOS (brew) and Linux (apt or pacman).
+- `install.sh` handles macOS (brew) and Arch Linux (pacman).
 
 ## Key conventions
 
