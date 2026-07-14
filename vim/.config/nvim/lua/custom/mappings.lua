@@ -15,7 +15,7 @@ function M.setup()
   vim.keymap.set('n', '<Leader>fh', ':History<CR>', { silent = true })
 
   -- General
-  vim.keymap.set('n', '<Leader><Leader>', ':nohls | CloseFloatingWindows<CR>:LTClearJumpHL<CR>', { silent = true })
+  vim.keymap.set('n', '<Leader><Leader>', ':nohls | CloseFloatingWindows<CR>', { silent = true })
   vim.keymap.set('n', 'Y', 'y$')
   vim.keymap.set('n', '<Leader>y%', ':let @+=@% | echo getreg("+")<CR>')
   vim.keymap.set('n', '<Leader>q', ':ToggleQuickFix<CR>', { silent = true })

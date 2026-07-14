@@ -39,16 +39,6 @@ end
 
 
 function M.setup()
-  require('litee.lib').setup({
-      panel = {
-          orientation = "bottom",
-          panel_size = 15,
-      },
-  })
-  require('litee.calltree').setup({
-    no_hls = true,
-  })
-
   vim.lsp.config['ts_ls'] = {
     init_options = {
       hostInfo = 'neovim',
@@ -229,7 +219,12 @@ function M.setup()
       vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
       vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
       vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-      vim.keymap.set('n', 'gR', vim.lsp.buf.incoming_calls, opts)
+      vim.keymap.set('n', 'gR', function()
+        require('custom.calltree').open('incoming')
+      end, opts)
+      vim.keymap.set('n', 'gC', function()
+        require('custom.calltree').open('outgoing')
+      end, opts)
       vim.keymap.set('n', '<space>f', function()
         vim.lsp.buf.format {}
         vim.cmd [[write]]

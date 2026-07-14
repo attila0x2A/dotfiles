@@ -33,9 +33,6 @@ vim.pack.add({
 
   -- Outline
   'https://github.com/stevearc/aerial.nvim',
-  -- Call tree
-  'https://github.com/ldelossa/litee.nvim',
-  'https://github.com/ldelossa/litee-calltree.nvim',
 })
 
 -- Was `packadd! matchit` in the old plugins.vim.
