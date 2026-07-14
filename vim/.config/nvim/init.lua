@@ -1,9 +1,7 @@
 require('plugins')
 
-vim.cmd [[
-source ~/.config/nvim/mappings.vim
-source ~/.config/nvim/options.vim
-]]
+require('custom.options').setup()
+require('custom.mappings').setup()
 
 vim.cmd [[
 augroup CursorLine

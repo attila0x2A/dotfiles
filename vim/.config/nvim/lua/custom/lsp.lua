@@ -255,6 +255,15 @@ function M.setup()
         -- vim.cmd [[EslintFixAll]]
         vim.cmd [[write]]
       end, opts)
+
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        buffer = ev.buf,
+        callback = function() vim.lsp.buf.document_highlight() end,
+      })
+      vim.api.nvim_create_autocmd('CursorMoved', {
+        buffer = ev.buf,
+        callback = function() vim.lsp.buf.clear_references() end,
+      })
     end,
   })
 
