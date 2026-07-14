@@ -2,11 +2,13 @@ local M = {}
 
 function M.setup()
   vim.cmd('colorscheme gruvbox')
+  vim.defer_fn(function()
+    vim.cmd([[
+      hi! LineNrBelow ctermfg=131 guifg=#af5f5f
+      hi! LineNrAbove ctermfg=108 guifg=#87af87
+    ]])
+  end, 100)
   vim.opt.termguicolors = true
-  vim.cmd([[
-    hi! LineNrBelow guifg=#a89984 guibg=NONE guisp=NONE gui=NONE
-    hi! LineNrAbove guifg=#b0a390 guibg=NONE guisp=NONE gui=NONE
-  ]])
 
   if vim.fn.executable('ag') == 1 then
     vim.opt.grepprg = 'ag --nogroup --nocolor'
