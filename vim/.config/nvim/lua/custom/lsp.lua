@@ -1,5 +1,5 @@
 local M = {}
---
+
 local function rename_file()
   local source_file, target_file
 
@@ -64,30 +64,6 @@ function M.setup()
     }
   }
 
-  vim.lsp.config['eslint'] = {
-    capabilities = capabilities,
-    cmd = { 'vscode-eslint-language-server', '--stdio', '--max_old_space_size=16096' },
-    settings = {
-      nodePath = '~/tulip/tulip/environments/node_modules',
-      runtime = 'node',
-    },
-    -- TODO: Reconsider doing this at write - latency may not be good.
-    -- on_attach = function(client, bufnr)
-    --   vim.api.nvim_create_autocmd("BufWritePre", {
-    --     buffer = bufnr,
-    --     command = "EslintFixAll",
-    --   })
-    -- end,
-  }
-
-  local prettier = {
-    formatCommand = 'prettierd "${INPUT}"',
-    formatStdin = true,
-    env = {
-      'PRETTIERD_LOCAL_PRETTIER_ONLY=1',
-    },
-  }
-
   vim.lsp.config['rust_analyzer'] = {
     cmd = { 'rust-analyzer' },
     filetypes = { 'rust' },
@@ -109,14 +85,9 @@ function M.setup()
             },
             allTargets = true,
             targetDir = "target/nvim-lsp-rust-analyzer",
-            -- FIXME
             features = "all",
-            -- features = {"protocol_feature_spice", "test_features", "nightly", "clock"},
         },
         check = {
-          -- command = "clippy",
-          -- extraEnv = { RUSTFLAGS = "-D warnings" },
-          -- extraArgs = { "--all-features", "--locked" },
           allTargets = true,
         },
         cfg = {
@@ -125,26 +96,8 @@ function M.setup()
         procMacro = {
             enable = true
         },
-        -- },
-        -- check = {
-        --   -- features = 'all',
-        --   command = "clippy",
-        --   extraArgs = {
-        --     "--",
-        --     -- "--no-deps",
-        --     "-Dwarnings",
-        --     -- "-Dclippy::correctness",
-        --     -- "-Dclippy::complexity",
-        --     -- "-Wclippy::perf",
-        --     "-Dclippy::pedantic",
-        --     -- "-Aclippy::missing_errors_doc",
-        --   },
-        -- },
       }
     },
-    -- on_attach = function(_client, bufnr)
-    --     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-    -- end
   }
   vim.lsp.enable('rust_analyzer');
 
@@ -187,6 +140,13 @@ function M.setup()
   }
   vim.lsp.enable('lua_ls');
 
+  local prettier = {
+    formatCommand = 'prettierd "${INPUT}"',
+    formatStdin = true,
+    env = {
+      'PRETTIERD_LOCAL_PRETTIER_ONLY=1',
+    },
+  }
   vim.lsp.config['efm'] = {
     capabilities = capabilities,
     init_options = { documentFormatting = true },
@@ -247,12 +207,7 @@ function M.setup()
       vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
       vim.keymap.set('n', 'gR', vim.lsp.buf.incoming_calls, opts)
       vim.keymap.set('n', '<space>f', function()
-        vim.lsp.buf.format {
-          -- async = true,
-          -- timeout_ms = 1000,
-          -- filter = function(client) return client.name == "efm" end,
-        }
-        -- vim.cmd [[EslintFixAll]]
+        vim.lsp.buf.format {}
         vim.cmd [[write]]
       end, opts)
 
