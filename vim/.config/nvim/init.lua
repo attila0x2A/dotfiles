@@ -179,7 +179,6 @@ vim.api.nvim_create_autocmd('FileType', {
       vim.treesitter.start(ev.buf)
       vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
       vim.wo.foldmethod = 'expr'
-      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
       if vim.bo.filetype == 'beancount' then
         vim.wo.foldlevel = 0
       else
