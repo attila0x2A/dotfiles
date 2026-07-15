@@ -25,9 +25,6 @@ vim.pack.add({
   'https://github.com/junegunn/fzf',
   'https://github.com/junegunn/fzf.vim',
 
-  -- Debugging
-  'https://github.com/epheien/termdbg',
-
   -- Treesitter
   'https://github.com/nvim-treesitter/nvim-treesitter',
 
@@ -37,6 +34,7 @@ vim.pack.add({
 
 -- Was `packadd! matchit` in the old plugins.vim.
 vim.cmd('packadd! matchit')
+vim.cmd('packadd! termdebug')
 
 
 -- Remove non-active plugins

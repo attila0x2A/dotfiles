@@ -32,23 +32,6 @@ function M.setup()
   vim.keymap.set('v', '<Leader>gy', ":'<,'>GBrowse!<CR>")
   vim.keymap.set('n', '<Leader>gb', ':Git blame<CR>')
 
-  -- Debugging
-  vim.keymap.set('n', '<Leader>dc', ':TContinue<CR>')
-  vim.keymap.set('n', '<Leader>dn', ':TNext<CR>')
-  vim.keymap.set('n', '<Leader>ds', ':TStep<CR>')
-  vim.keymap.set('n', '<Leader>df', ':TSendCommand finish<CR>')
-
-  vim.keymap.set('n', '<Leader>dp', ':TPrint <C-R>=expand("<cword>")<CR><CR>')
-  vim.keymap.set('n', '<Leader>db', ':TToggleBreak<CR>')
-  vim.keymap.set('n', '<Leader>dd', ':TDebug<CR>')
-  vim.keymap.set('n', '<Leader>dr', ':TRunFile<CR>')
-  vim.keymap.set('n', '<Leader>dt', ':TRun <C-R>=expand("%:t:r")<CR>::<C-R>=expand("<cword>")<CR><CR>')
-
-  vim.keymap.set('n', '<F5>', ':TContinue<CR>')
-  vim.keymap.set('n', '<F10>', ':TNext<CR>')
-  vim.keymap.set('n', '<F11>', ':TStep<CR>')
-  vim.keymap.set('n', '<F12>', ':TSendCommand finish<CR>')
-
   -- Outline
   vim.keymap.set('n', '<Leader>o', ':AerialToggle<CR>', { silent = true })
 
