@@ -1,10 +1,9 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "deepseek/deepseek-v4-pro",
-  "small_model": "deepseek/deepseek-v4-flash",
+  "small_model": "google/gemini-3.5-flash",
   "autoupdate": false,
   "instructions": ["instructions.md"],
-  "small_model": "deepseek/deepseek-v4-flash",
   "logLevel": "INFO",
   "compaction": {
     "auto": true,
@@ -64,6 +63,7 @@
         "deepseek-v4-flash": { "name": "DeepSeek V4 Flash" },
         "deepseek-v4-pro": { "name": "DeepSeek V4 Pro", "reasoning": true }
       }
-    }
+    },
+    "google": {}
   }
 }

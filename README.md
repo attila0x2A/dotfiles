@@ -43,6 +43,7 @@ This installs and configures everything. Safe to re-run any time.
    gpg --quick-gen-key "aiagent@localhost" default default never
    pass init "aiagent@localhost"
    pass insert deepseek/opencode-api-key
+   pass insert google/gemini-api-key
    exit
    ```
 

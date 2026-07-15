@@ -28,6 +28,7 @@ runas podman container exists "$PROXY_NAME" 2>/dev/null || runas podman run -d \
 
 runas bash -c "
   DEEPSEEK_API_KEY=\$(pass show deepseek/opencode-api-key)
+  GOOGLE_GENERATIVE_AI_API_KEY=\$(pass show google/gemini-api-key)
   podman run --rm -it \
     --userns=keep-id \
     --network '$NETWORK' \
@@ -42,6 +43,7 @@ runas bash -c "
     -e NO_PROXY=localhost,127.0.0.1 \
     -e OPENCODE_ENABLE_EXA=1 \
     -e DEEPSEEK_API_KEY="\${DEEPSEEK_API_KEY}" \
+    -e GOOGLE_GENERATIVE_AI_API_KEY="\${GOOGLE_GENERATIVE_AI_API_KEY}" \
     -e XDG_STATE_HOME=/tmp/opencode-state \
     -e XDG_CONFIG_HOME=/home/${AGENT_USER}/.config \
     -e XDG_CACHE_HOME=/tmp/opencode-cache \
