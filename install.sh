@@ -122,7 +122,7 @@ if command -v podman >/dev/null 2>&1 && id aiagent >/dev/null 2>&1; then
     sudo -u "aiagent" env XDG_RUNTIME_DIR="/run/user/$(id -u "aiagent")" "$@"
   }
   log "Building opencode-sandbox image..."
-  runas_aiagent podman build -t opencode-sandbox \
+  runas_aiagent podman build -q -t opencode-sandbox \
       -f "$HOME/.config/opencode-sandbox/Containerfile" \
       "$HOME/.config/opencode-sandbox"
 
