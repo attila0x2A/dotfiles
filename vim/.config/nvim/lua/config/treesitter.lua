@@ -12,12 +12,6 @@ require('nvim-treesitter').install({
   'json'
 })
 
-vim.filetype.add({
-  extension = {
-    bean = 'beancount',
-  }
-})
-
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'rust',
