@@ -53,7 +53,6 @@ end, { nargs = 0 })
 
 vim.api.nvim_create_user_command('TDebug', function()
   local package = FindCargoPackage()
-  print(package)
   local program = function()
     local output = vim.fn.systemlist("cargo test -p " ..  package .." --features=protocol_feature_spice --no-run --message-format=json -q 2>&1")
     for _, l in ipairs(output) do
@@ -116,19 +115,24 @@ function GetCargoPackageName(filepath)
 end
 
 function FindCargoPackage()
-  local current_dir = vim.fn.expand("%:h")
-  while current_dir ~= vim.fn.getcwd() do
-    local cargo_file = current_dir .. "/Cargo.toml"
-    if vim.fn.filereadable(cargo_file) == 1 then
-      vim.api.nvim_echo({{"Cargo.toml found in: " .. current_dir}}, true, {})
-      local name, err = GetCargoPackageName(cargo_file)
-      if name then
-        return name
-      else
-        error(err)
-      end
+  local start_path = vim.api.nvim_buf_get_name(0)
+  start_path = start_path == "" and vim.fn.getcwd() or vim.fs.dirname(start_path)
+
+  local cargo_files = vim.fs.find('Cargo.toml', {
+    upward = true,
+    stop = vim.uv.os_homedir(),
+    path = start_path
+  })
+
+  if #cargo_files > 0 then
+    local cargo_file = cargo_files[1]
+    vim.api.nvim_echo({{"Cargo.toml found at: " .. cargo_file}}, true, {})
+    local name, err = GetCargoPackageName(cargo_file)
+    if name then
+      return name
+    else
+      error(err)
     end
-    current_dir = vim.fn.fnamemodify(current_dir, ":h") -- Get parent directory
   end
   vim.api.nvim_echo({{"Cargo.toml not found in any parent directory."}}, true, {})
 end
