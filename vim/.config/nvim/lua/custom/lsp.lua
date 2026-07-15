@@ -65,7 +65,7 @@ function M.setup()
     cmd = { 'beancount-language-server' },
     init_options = {
       -- journal_file = "<path to journal file>",
-      pythonPath = "/home/attila/.pyenv/shims/python3",
+      pythonPath = vim.fn.expand("~/.pyenv/shims/python3"),
     },
   }
   vim.lsp.enable('beancount');
