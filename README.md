@@ -46,26 +46,7 @@ This installs and configures everything. Safe to re-run any time.
    exit
    ```
 
-1. Give access to the configuration (may need to be re-run when any of the files
-   changes, since editor may replace inode)
-   ```shell
-   setfacl -m u:aiagent:x ~
-   setfacl -m u:aiagent:x ~/.config
-   setfacl -m u:aiagent:x ~/.config/opencode
-   setfacl -m u:aiagent:r ~/.config/opencode/opencode.json
-   setfacl -m u:aiagent:x ~/.config/opencode-sandbox
-   setfacl -m u:aiagent:r ~/.config/opencode-sandbox/squid.conf
-   setfacl -m u:aiagent:r ~/.config/opencode-sandbox/Containerfile
-   ```
-
-1. Build opencode-sandbox image
-    ```shell
-    sudo machinectl shell --setenv="HOST_HOME=${HOME}" aiagent@
-    podman build -t opencode-sandbox \
-      -f "${HOST_HOME}/.config/opencode-sandbox/Containerfile" \
-      "${HOST_HOME}/.config/opencode-sandbox"
-    exit
-    ```
+1. Run `./install.sh` to finish setup.
 
 
 ## Additional configurations

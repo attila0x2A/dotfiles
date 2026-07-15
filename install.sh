@@ -113,6 +113,36 @@ log "Installing Neovim plugins (this may take a minute on first run)..."
 nvim --headless "+quitall" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
+# Setup/update opencode-sandboxed
+# ---------------------------------------------------------------------------
+if command -v podman >/dev/null 2>&1 && id aiagent >/dev/null 2>&1; then
+  log "Setting up acls for aiagent"
+  setfacl -m u:aiagent:x "$HOME"
+  setfacl -m u:aiagent:x "$HOME/.config"
+  setfacl -m u:aiagent:x "$HOME/.config/opencode"
+  setfacl -m u:aiagent:r "$HOME/.config/opencode/opencode.json"
+  setfacl -m u:aiagent:r "$HOME/.config/opencode/instructions.md"
+  setfacl -m u:aiagent:x "$HOME/.config/opencode-sandbox"
+  setfacl -m u:aiagent:r "$HOME/.config/opencode-sandbox/squid.conf"
+  setfacl -m u:aiagent:r "$HOME/.config/opencode-sandbox/Containerfile"
+
+  runas_aiagent() {
+    sudo -u "aiagent" env XDG_RUNTIME_DIR="/run/user/$(id -u "aiagent")" "$@"
+  }
+  log "Building opencode-sandbox image..."
+  runas_aiagent podman build -t opencode-sandbox \
+      -f "$HOME/.config/opencode-sandbox/Containerfile" \
+      "$HOME/.config/opencode-sandbox"
+
+  log "Restarting opencode squid proxy if it's running..."
+  PROXY_NAME="opencode-egress-proxy"
+  runas_aiagent podman container exists "$PROXY_NAME" 2>/dev/null && \
+    runas_aiagent podman container restart "$PROXY_NAME" 2>/dev/null
+else
+  warn "podman or aiagent user not found; skipping sandbox image build"
+fi
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 
