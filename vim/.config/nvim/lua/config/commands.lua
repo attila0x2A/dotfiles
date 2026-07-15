@@ -22,5 +22,9 @@ vim.api.nvim_create_user_command('ToggleQuickFix', function()
 end, { nargs = 0 })
 
 vim.api.nvim_create_user_command('Ag', function(opts)
-  vim.fn['fzf#vim#ag'](opts.args, '--ignore=node_modules', '--hidden', vim.fn['fzf#vim#with_preview'](), opts.bang)
+  vim.fn['fzf#vim#ag'](opts.args, '--hidden --ignore node_modules', vim.fn['fzf#vim#with_preview'](), opts.bang)
+end, { bang = true, nargs = '*' })
+
+vim.api.nvim_create_user_command('Rg', function(opts)
+  vim.fn['fzf#vim#grep']('rg --column --line-number --no-heading --color=always --smart-case --hidden -- ' .. vim.fn.shellescape(opts.args), 1, vim.fn['fzf#vim#with_preview'](), opts.bang)
 end, { bang = true, nargs = '*' })
