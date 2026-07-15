@@ -15,35 +15,17 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 log()  { printf '\033[1;32m==>\033[0m %s\n' "$1"; }
 warn() { printf '\033[1;33m==>\033[0m %s\n' "$1" >&2; }
 
-OS="$(uname -s)"
-
 # ---------------------------------------------------------------------------
-# Package install helper: uses brew on macOS, pacman on Arch Linux.
-# Anything else gets a warning and a manual-install hint instead of failing.
+# Package install helper.
 # ---------------------------------------------------------------------------
 pkg_install() {
   local pkg="$1"
-  case "$OS" in
-    Darwin)
-      command -v brew >/dev/null || {
-        warn "Homebrew not found; install it from https://brew.sh first."
-        return 1
-      }
-      brew install $pkg
-      ;;
-      Linux)
-      if command -v pacman >/dev/null; then
-        sudo pacman -Sy && sudo pacman -S --noconfirm $pkg
-      else
-        warn "No supported package manager found for '$pkg'; install it manually."
-        return 1
-      fi
-      ;;
-    *)
-      warn "Unsupported OS '$OS' for '$pkg'; install it manually."
-      return 1
-      ;;
-  esac
+  if command -v pacman >/dev/null; then
+    sudo pacman -Sy && sudo pacman -S --noconfirm $pkg
+  else
+    warn "No supported package manager found for '$pkg'; install it manually."
+    return 1
+  fi
 }
 
 require_cmd() {
