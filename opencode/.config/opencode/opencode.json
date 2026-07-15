@@ -17,6 +17,8 @@
     "todowrite": "allow",
     "websearch": "allow",
     "skill": "allow",
+    "glob": "allow",
+    "ls": "allow",
     "bash": {
       "*": "ask",
       "git status": "allow",
