@@ -45,6 +45,7 @@ require_cmd() {
 # ---------------------------------------------------------------------------
 require_cmd stow
 require_cmd nvim neovim
+require_cmd rg ripgrep
 require_cmd fzf
 require_cmd gitleaks
 require_cmd opencode

@@ -84,23 +84,14 @@ if [[ -d $HOME/.pyenv ]]; then
   eval "$(pyenv init - zsh)"
 fi
 
-path=($path ~/go/go/bin ~/go/bin ~/.cargo/bin)
+typeset -U path
+path=(~/go/go/bin ~/go/bin ~/.cargo/bin $path)
 
-# Use ag for fzf.
-export FZF_DEFAULT_COMMAND="ag -i --nocolor --nogroup --hidden \
-  --ignore .git \
-  --ignore .svn \
-  --ignore .hg \
-  --ignore .DS_Store \
-  --ignore go/pkg \
-  --ignore \"**/*.pyc\" \
-  --ignore .git5_specs \
-  --ignore review \
-  --ignore vendor \
-  --ignore node_modules \
-  -g ''"
-  # | sed -r 's|^(.*)(/[^/]*)$|\1\n\0|' | awk '!x[\$0]++' -" # Last part here makes sure that directories are shown in addition to files
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# Use rg (ripgrep) or ag (silver searcher) for fzf.
+if command -v rg >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
 
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --bind 'alt-a:select-all,alt-d:deselect-all'"
 
