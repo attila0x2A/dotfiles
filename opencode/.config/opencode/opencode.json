@@ -2,14 +2,22 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "deepseek/deepseek-v4-pro",
   "small_model": "deepseek/deepseek-v4-flash",
+  "autoupdate": false,
+  "instructions": ["instructions.md"],
+  "small_model": "deepseek/deepseek-v4-flash",
   "logLevel": "INFO",
   "compaction": {
     "auto": true,
-    "tail_turns": 15,
+    "tail_turns": 10,
+    "reserved": 5000,
     "prune": true
   },
   "permission": {
     "*": "ask",
+    "question": "allow",
+    "todowrite": "allow",
+    "websearch": "allow",
+    "skill": "allow",
     "bash": {
       "*": "ask",
       "git status": "allow",

@@ -1,5 +1,9 @@
-FROM archlinux:latest
-RUN pacman -Syu --noconfirm opencode git openssh ca-certificates && \
-    pacman -Scc --noconfirm
+FROM archlinux:base-20260712.0.555161
+RUN pacman -Syu --noconfirm \
+    opencode git openssh ca-certificates \
+    rust rust-analyzer rust-src \
+    python python-pip python-lsp-server \
+    ripgrep fd \
+    && pacman -Scc --noconfirm
 WORKDIR /workspace
 ENTRYPOINT ["opencode"]

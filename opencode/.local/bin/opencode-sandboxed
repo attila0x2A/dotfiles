@@ -39,13 +39,15 @@ runas bash -c "
     --mount type=tmpfs,target=/home/${AGENT_USER},U=true \
     -e HTTPS_PROXY=http://$PROXY_NAME:3128 \
     -e HTTP_PROXY=http://$PROXY_NAME:3128 \
+    -e NO_PROXY=localhost,127.0.0.1 \
+    -e OPENCODE_ENABLE_EXA=1 \
     -e DEEPSEEK_API_KEY="\${DEEPSEEK_API_KEY}" \
     -e XDG_STATE_HOME=/tmp/opencode-state \
     -e XDG_CONFIG_HOME=/home/${AGENT_USER}/.config \
     -e XDG_CACHE_HOME=/tmp/opencode-cache \
     -v '$PWD':/workspace \
     -v '$HOME/.config/opencode/opencode.json:/home/${AGENT_USER}/.config/opencode/opencode.json:ro' \
-    -v '$HOME/.config/opencode/skills:/home/${AGENT_USER}/.config/opencode/skills:ro' \
+    -v '$HOME/.config/opencode/instructions.md:/home/${AGENT_USER}/.config/opencode/instructions.md:ro' \
     -v '$OC_DATA:/home/${AGENT_USER}/.local/share/opencode' \
     '$IMAGE' ${OC_ARGS:+ }${OC_ARGS}
 "
