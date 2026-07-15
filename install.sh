@@ -99,14 +99,24 @@ nvim --headless "+quitall" 2>/dev/null || true
 # ---------------------------------------------------------------------------
 if command -v podman >/dev/null 2>&1 && id aiagent >/dev/null 2>&1; then
   log "Setting up acls for aiagent"
-  setfacl -m u:aiagent:x "$HOME"
-  setfacl -m u:aiagent:x "$HOME/.config"
-  setfacl -m u:aiagent:x "$HOME/.config/opencode"
-  setfacl -m u:aiagent:r "$HOME/.config/opencode/opencode.json"
-  setfacl -m u:aiagent:r "$HOME/.config/opencode/instructions.md"
-  setfacl -m u:aiagent:x "$HOME/.config/opencode-sandbox"
-  setfacl -m u:aiagent:r "$HOME/.config/opencode-sandbox/squid.conf"
-  setfacl -m u:aiagent:r "$HOME/.config/opencode-sandbox/Containerfile"
+
+  # Only add ACL if aiagent doesn't already have that specific permission
+  acl_set_if_missing() {
+    local path="$1"
+    local perm="$2"
+    if ! getfacl -p "$path" 2>/dev/null | grep -q "^user:aiagent:.*${perm}"; then
+      setfacl -m "u:aiagent:${perm}" "$path"
+    fi
+  }
+
+  acl_set_if_missing "$HOME" x
+  acl_set_if_missing "$HOME/.config" x
+  acl_set_if_missing "$HOME/.config/opencode" x
+  acl_set_if_missing "$HOME/.config/opencode/opencode.json" r
+  acl_set_if_missing "$HOME/.config/opencode/instructions.md" r
+  acl_set_if_missing "$HOME/.config/opencode-sandbox" x
+  acl_set_if_missing "$HOME/.config/opencode-sandbox/squid.conf" r
+  acl_set_if_missing "$HOME/.config/opencode-sandbox/Containerfile" r
 
   runas_aiagent() {
     sudo -u "aiagent" env XDG_RUNTIME_DIR="/run/user/$(id -u "aiagent")" "$@"
