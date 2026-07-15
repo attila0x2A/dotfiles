@@ -1,10 +1,6 @@
 local M = {}
 
 function M.setup()
-  vim.api.nvim_create_user_command('Ag', function(opts)
-    vim.fn['fzf#vim#ag'](opts.args, '--ignore=node_modules', vim.fn['fzf#vim#with_preview'](), opts.bang)
-  end, { bang = true, nargs = '*' })
-
   -- FZF
   vim.keymap.set('n', '<C-p>', ':Files<CR>', { silent = true })
   vim.keymap.set('n', '<Leader>ff', ':Files<CR>', { silent = true })

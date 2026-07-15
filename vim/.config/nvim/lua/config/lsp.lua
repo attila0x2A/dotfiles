@@ -8,21 +8,21 @@ function M.setup()
       ['rust-analyzer'] = {
         -- https://rust-analyzer.github.io/book/configuration.html
         imports = {
-            granularity = {
-                group = "module",
-            },
-            prefix = "self",
+          granularity = {
+            group = "module",
+          },
+          prefix = "self",
         },
         references = {
           excludeTests = true,
         },
         cargo = {
-            buildScripts = {
-                enable = true,
-            },
-            allTargets = true,
-            targetDir = "target/nvim-lsp-rust-analyzer",
-            features = "all",
+          buildScripts = {
+            enable = true,
+          },
+          allTargets = true,
+          targetDir = "target/nvim-lsp-rust-analyzer",
+          features = "all",
         },
         check = {
           allTargets = true,
@@ -31,7 +31,7 @@ function M.setup()
           setTest = true,
         },
         procMacro = {
-            enable = true
+          enable = true
         },
       }
     },
@@ -129,10 +129,10 @@ function M.setup()
       vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
       vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
       vim.keymap.set('n', 'gR', function()
-        require('custom.calltree').open('incoming')
+        require('calltree').open('incoming')
       end, opts)
       vim.keymap.set('n', 'gC', function()
-        require('custom.calltree').open('outgoing')
+        require('calltree').open('outgoing')
       end, opts)
       vim.keymap.set('n', '<space>f', function()
         vim.lsp.buf.format {}
@@ -155,11 +155,11 @@ function M.setup()
 
   -- See `:help vim.diagnostic.*` for documentation on any of the below functions
   vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-  vim.keymap.set('n', '[d', function ()
-    vim.diagnostic.jump({count = -1})
+  vim.keymap.set('n', '[d', function()
+    vim.diagnostic.jump({ count = -1 })
   end)
-  vim.keymap.set('n', ']d', function ()
-    vim.diagnostic.jump({count = 1})
+  vim.keymap.set('n', ']d', function()
+    vim.diagnostic.jump({ count = 1 })
   end)
 end
 
