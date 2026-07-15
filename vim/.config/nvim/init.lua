@@ -1,11 +1,11 @@
 require('plugins')
 
-require('config.options').setup()
-require('config.mappings').setup()
-require('config.commands').setup()
-require('config.autocmds').setup()
-require('config.lsp').setup()
-require('config.treesitter').setup()
+require('config.options')
+require('config.mappings')
+require('config.commands')
+require('config.autocmds')
+require('config.lsp')
+require('config.treesitter')
 
 require('hop').setup()
 require('aerial').setup({

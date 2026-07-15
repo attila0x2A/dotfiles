@@ -1,166 +1,160 @@
-local M = {}
-
-function M.setup()
-  vim.lsp.config['rust_analyzer'] = {
-    cmd = { 'rust-analyzer' },
-    filetypes = { 'rust' },
-    settings = {
-      ['rust-analyzer'] = {
-        -- https://rust-analyzer.github.io/book/configuration.html
-        imports = {
-          granularity = {
-            group = "module",
-          },
-          prefix = "self",
+vim.lsp.config['rust_analyzer'] = {
+  cmd = { 'rust-analyzer' },
+  filetypes = { 'rust' },
+  settings = {
+    ['rust-analyzer'] = {
+      -- https://rust-analyzer.github.io/book/configuration.html
+      imports = {
+        granularity = {
+          group = "module",
         },
-        references = {
-          excludeTests = true,
-        },
-        cargo = {
-          buildScripts = {
-            enable = true,
-          },
-          allTargets = true,
-          targetDir = "target/nvim-lsp-rust-analyzer",
-          features = "all",
-        },
-        check = {
-          allTargets = true,
-        },
-        cfg = {
-          setTest = true,
-        },
-        procMacro = {
-          enable = true
-        },
-      }
-    },
-  }
-  vim.lsp.enable('rust_analyzer');
-
-  vim.lsp.config['lua_ls'] = {
-    cmd = { 'lua-language-server' },
-    filetypes = { 'lua' },
-    settings = {
-      Lua = {
-        runtime = {
-          version = 'LuaJIT'
-        },
-        format = {
+        prefix = "self",
+      },
+      references = {
+        excludeTests = true,
+      },
+      cargo = {
+        buildScripts = {
           enable = true,
         },
-        workspace = {
-          checkThirdParty = false,
-          library = {
-            vim.env.VIMRUNTIME
-          }
+        allTargets = true,
+        targetDir = "target/nvim-lsp-rust-analyzer",
+        features = "all",
+      },
+      check = {
+        allTargets = true,
+      },
+      cfg = {
+        setTest = true,
+      },
+      procMacro = {
+        enable = true
+      },
+    }
+  },
+}
+vim.lsp.enable('rust_analyzer');
+
+vim.lsp.config['lua_ls'] = {
+  cmd = { 'lua-language-server' },
+  filetypes = { 'lua' },
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT'
+      },
+      format = {
+        enable = true,
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME
         }
       }
     }
   }
-  vim.lsp.enable('lua_ls');
+}
+vim.lsp.enable('lua_ls');
 
-  vim.lsp.config['beancount'] = {
-    filetypes = { 'beancount' },
-    cmd = { 'beancount-language-server' },
-    init_options = {
-      -- journal_file = "<path to journal file>",
-      pythonPath = vim.fn.expand("~/.pyenv/shims/python3"),
-    },
-  }
-  vim.lsp.enable('beancount');
+vim.lsp.config['beancount'] = {
+  filetypes = { 'beancount' },
+  cmd = { 'beancount-language-server' },
+  init_options = {
+    -- journal_file = "<path to journal file>",
+    pythonPath = vim.fn.expand("~/.pyenv/shims/python3"),
+  },
+}
+vim.lsp.enable('beancount');
 
-  vim.lsp.config['pylsp'] = {
-    cmd = { 'pylsp' },
-    filetypes = { 'python' },
-  };
-  vim.lsp.enable('pylsp');
+vim.lsp.config['pylsp'] = {
+  cmd = { 'pylsp' },
+  filetypes = { 'python' },
+};
+vim.lsp.enable('pylsp');
 
-  -- Use LspAttach autocommand to only map the following keys
-  -- after the language server attaches to the current buffer
-  vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-    callback = function(ev)
-      -- Enable completion triggered by <c-x><c-o>
-      vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
-        autotrigger = true,
-        convert = function(item)
-          local text = nil
-          if item.textEdit and item.textEdit.newText then
-            text = item.textEdit.newText
-          elseif item.insertText then
-            text = item.insertText
-          end
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
+      autotrigger = true,
+      convert = function(item)
+        local text = nil
+        if item.textEdit and item.textEdit.newText then
+          text = item.textEdit.newText
+        elseif item.insertText then
+          text = item.insertText
+        end
 
-          if text then
-            text = text:gsub('%$%b{}', function(s)
-              return s:match('%${%d+:(.*)}') or ''
-            end):gsub('%$%d+', '')
-          else
-            text = item.label
-          end
+        if text then
+          text = text:gsub('%$%b{}', function(s)
+            return s:match('%${%d+:(.*)}') or ''
+          end):gsub('%$%d+', '')
+        else
+          text = item.label
+        end
 
-          return { abbr = text, menu = '' }
-        end,
-      })
+        return { abbr = text, menu = '' }
+      end,
+    })
 
-      vim.api.nvim_create_autocmd('InsertCharPre', {
+    vim.api.nvim_create_autocmd('InsertCharPre', {
+      buffer = ev.buf,
+      callback = function()
+        if vim.v.char:match('[a-zA-Z_]') then
+          vim.schedule(vim.lsp.completion.get)
+        end
+      end,
+    })
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    -- Declarations aren't supported for TS.
+    -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, opts)
+
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gR', function()
+      require('calltree').open('incoming')
+    end, opts)
+    vim.keymap.set('n', 'gC', function()
+      require('calltree').open('outgoing')
+    end, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format {}
+      vim.cmd [[write]]
+    end, opts)
+
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/documentHighlight') then
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = ev.buf,
-        callback = function()
-          if vim.v.char:match('[a-zA-Z_]') then
-            vim.schedule(vim.lsp.completion.get)
-          end
-        end,
+        callback = function() vim.lsp.buf.document_highlight() end,
       })
+      vim.api.nvim_create_autocmd('CursorMoved', {
+        buffer = ev.buf,
+        callback = function() vim.lsp.buf.clear_references() end,
+      })
+    end
+  end,
+})
 
-      -- Buffer local mappings.
-      -- See `:help vim.lsp.*` for documentation on any of the below functions
-      local opts = { buffer = ev.buf }
-      -- Declarations aren't supported for TS.
-      -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-      vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, opts)
-
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-      vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-      vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-      vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-      vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-      vim.keymap.set('n', 'gR', function()
-        require('calltree').open('incoming')
-      end, opts)
-      vim.keymap.set('n', 'gC', function()
-        require('calltree').open('outgoing')
-      end, opts)
-      vim.keymap.set('n', '<space>f', function()
-        vim.lsp.buf.format {}
-        vim.cmd [[write]]
-      end, opts)
-
-      local client = vim.lsp.get_client_by_id(ev.data.client_id)
-      if client and client:supports_method('textDocument/documentHighlight') then
-        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-          buffer = ev.buf,
-          callback = function() vim.lsp.buf.document_highlight() end,
-        })
-        vim.api.nvim_create_autocmd('CursorMoved', {
-          buffer = ev.buf,
-          callback = function() vim.lsp.buf.clear_references() end,
-        })
-      end
-    end,
-  })
-
-  -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-  vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-  vim.keymap.set('n', '[d', function()
-    vim.diagnostic.jump({ count = -1 })
-  end)
-  vim.keymap.set('n', ']d', function()
-    vim.diagnostic.jump({ count = 1 })
-  end)
-end
-
-return M
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump({ count = -1 })
+end)
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump({ count = 1 })
+end)
