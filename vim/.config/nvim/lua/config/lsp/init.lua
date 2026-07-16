@@ -83,8 +83,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', function()
-  vim.diagnostic.jump({ count = -1 })
+  vim.diagnostic.jump({ count = -1, float = true })
 end)
 vim.keymap.set('n', ']d', function()
-  vim.diagnostic.jump({ count = 1 })
+  vim.diagnostic.jump({ count = 1, float = true })
 end)
