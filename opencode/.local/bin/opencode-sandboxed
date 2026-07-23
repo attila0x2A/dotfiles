@@ -21,7 +21,7 @@ fi
 
 runas mkdir -p "$OC_DATA"
 runas podman network exists "$NETWORK" 2>/dev/null || runas podman network create "$NETWORK"
-runas podman container exists "$PROXY_NAME" 2>/dev/null || runas podman run -d \
+runas podman start "$PROXY_NAME" 2>/dev/null || runas podman run -d \
   --name "$PROXY_NAME" --network "$NETWORK" \
   -v "$SANDBOX_CFG/squid.conf:/etc/squid/squid.conf:ro" \
   docker.io/ubuntu/squid
