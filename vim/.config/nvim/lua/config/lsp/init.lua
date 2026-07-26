@@ -1,7 +1,8 @@
-require('config.lsp.rust')
-require('config.lsp.lua')
 require('config.lsp.beancount')
+require('config.lsp.go')
+require('config.lsp.lua')
 require('config.lsp.python')
+require('config.lsp.rust')
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer

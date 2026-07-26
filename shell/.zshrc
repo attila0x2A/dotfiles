@@ -85,7 +85,7 @@ if [[ -d $HOME/.pyenv ]]; then
 fi
 
 typeset -U path
-path=(~/go/go/bin ~/go/bin ~/.cargo/bin $path)
+path=(/usr/local/go/bin ~/go/bin ~/.cargo/bin $path)
 
 # Use rg (ripgrep) or ag (silver searcher) for fzf.
 if command -v rg >/dev/null 2>&1; then

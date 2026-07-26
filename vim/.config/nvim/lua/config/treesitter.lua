@@ -9,7 +9,8 @@ require('nvim-treesitter').install({
   'jsx',
   'tsx',
   'html',
-  'json'
+  'json',
+  'go',
 })
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -25,6 +26,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescriptreact',
     'html',
     'json',
+    'go',
   },
   callback = function(ev)
     vim.schedule(function()
