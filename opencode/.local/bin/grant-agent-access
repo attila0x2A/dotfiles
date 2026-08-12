@@ -18,20 +18,25 @@ fi
 WORKDIR="$(realpath "$TARGET_DIR")"
 echo "Granting $AGENT_USER access to $WORKDIR (mirroring owner permissions)..."
 
-# default:user:: permissions are added to make sure that user keeps access to the files created by the agent.
-# Similarly default:user:agent are added so that agent has access to newly created files.
-# TODO: Ideally this should be more robust: if default users permissions exist somewhere they should be kept in place and extended.
-getfacl -P -p -E "$WORKDIR" 2>/dev/null | awk '
-  /^user::/ {
-    n = split($0, a, ":")
-    p = a[3]
-    print
-    printf "default:user::%s\n", p
-    next
-  }
-  { print }
-' | setfacl --restore=- -P
+# default:user:: permissions are added to make sure that user keeps access
+# to the files created by the agent. Applied to all subdirectories, not just
+# the top-level WORKDIR.
+# TODO: Ideally this should be more robust: if default users permissions exist somewhere they should be kept the same.
+find "$WORKDIR" -type d -print0 2>/dev/null | while IFS= read -r -d '' dir; do
+    getfacl -P -p -E "$dir" 2>/dev/null | awk '
+      /^user::/ {
+        n = split($0, a, ":")
+        p = a[3]
+        print
+        printf "default:user::%s\n", p
+        next
+      }
+      { print }
+    ' | setfacl --restore=- -P
+done
 
+# Similarly default:user:agent are added so that agent has access to newly
+# created files.
 getfacl -R -P -p -E "$WORKDIR" 2>/dev/null | awk -v agent="$AGENT_USER" '
   /^user::/ {
     n = split($0, a, ":")
