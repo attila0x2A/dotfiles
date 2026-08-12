@@ -36,8 +36,8 @@ runas bash -c "
     --security-opt no-new-privileges \
     --memory=4g --cpus=2 --pids-limit=512 \
     --read-only \
-    --mount type=tmpfs,target=/tmp,U=true \
-    --mount type=tmpfs,target=/home/${AGENT_USER},U=true \
+    --mount type=tmpfs,target=/tmp,chown=true \
+    --mount type=tmpfs,target=/home/${AGENT_USER},chown=true \
     -e HTTPS_PROXY=http://$PROXY_NAME:3128 \
     -e HTTP_PROXY=http://$PROXY_NAME:3128 \
     -e NO_PROXY=localhost,127.0.0.1 \
