@@ -49,7 +49,7 @@ runas bash -c "
     -e XDG_CACHE_HOME=/tmp/opencode-cache \
     -v '$PWD':/workspace \
     -v '$HOME/.config/opencode/opencode.json:/home/${AGENT_USER}/.config/opencode/opencode.json:ro' \
-    -v '$HOME/.config/opencode/instructions.md:/home/${AGENT_USER}/.config/opencode/instructions.md:ro' \
+    -v '$HOME/.config/opencode/AGENTS.md:/home/${AGENT_USER}/.config/opencode/AGENTS.md:ro' \
     -v '$OC_DATA:/home/${AGENT_USER}/.local/share/opencode' \
     '$IMAGE' ${OC_ARGS:+ }${OC_ARGS}
 "

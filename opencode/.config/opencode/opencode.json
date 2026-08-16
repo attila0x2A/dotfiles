@@ -3,7 +3,6 @@
   "model": "deepseek/deepseek-v4-pro",
   "small_model": "google/gemini-3.5-flash",
   "autoupdate": false,
-  "instructions": ["instructions.md"],
   "logLevel": "INFO",
   "compaction": {
     "auto": true,

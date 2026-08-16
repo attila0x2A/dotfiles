@@ -13,7 +13,7 @@ Dotfiles managed via GNU stow. Directory trees mirror `$HOME` (e.g. `vim/.config
 ## OpenCode config
 
 - `opencode/.config/opencode/opencode.json` — model, provider, permissions, compaction
-- `opencode/.config/opencode/instructions.md` — global conciseness rules
+- `opencode/.config/opencode/AGENTS.md` — global agent rules
 - Sandbox configs under `opencode/.config/opencode-sandbox/`
 
 ## Permission rules

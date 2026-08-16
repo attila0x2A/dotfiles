@@ -113,7 +113,7 @@ if command -v podman >/dev/null 2>&1 && id aiagent >/dev/null 2>&1; then
   acl_set_if_missing "$HOME/.config" x
   acl_set_if_missing "$HOME/.config/opencode" x
   acl_set_if_missing "$HOME/.config/opencode/opencode.json" r
-  acl_set_if_missing "$HOME/.config/opencode/instructions.md" r
+  acl_set_if_missing "$HOME/.config/opencode/AGENTS.md" r
   acl_set_if_missing "$HOME/.config/opencode-sandbox" x
   acl_set_if_missing "$HOME/.config/opencode-sandbox/squid.conf" r
   acl_set_if_missing "$HOME/.config/opencode-sandbox/Containerfile" r
