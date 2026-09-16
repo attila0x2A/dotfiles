@@ -40,6 +40,27 @@ require_cmd() {
   fi
 }
 
+aur_install() {
+  local pkg="$1"
+  if command -v pamac >/dev/null; then
+    pamac build --no-confirm "$pkg"
+  else
+    warn "pamac not found for AUR package '$pkg'; install it manually."
+    return 1
+  fi
+}
+
+require_aur_cmd() {
+  local cmd="$1"
+  local pkg="${2:-$cmd}"
+  if command -v "$cmd" >/dev/null 2>&1; then
+    log "$cmd already installed, skipping."
+  else
+    log "Installing $pkg (AUR)..."
+    aur_install "$pkg"
+  fi
+}
+
 # ---------------------------------------------------------------------------
 # Core tools
 # ---------------------------------------------------------------------------
@@ -49,6 +70,9 @@ require_cmd rg ripgrep
 require_cmd fzf
 require_cmd gitleaks
 require_cmd podman podman slirp4netns fuse-overlayfs shadow acl pass gnupg
+
+require_aur_cmd caffeine caffeine-ng
+require_aur_cmd google-chrome-stable google-chrome
 
 # ---------------------------------------------------------------------------
 # oh-my-zsh + zsh-autosuggestions
