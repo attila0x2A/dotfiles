@@ -113,6 +113,31 @@ fi
 log "Stowing..."
 cd "$DOTFILES_DIR"
 stow -R vim shell opencode
+# --no-folding: systemd and WirePlumber write into these directories, so they
+# must be real directories and not symlinks into the checkout.
+stow -R --no-folding bluetooth
+
+# ---------------------------------------------------------------------------
+# Bluetooth: reconnect devices from the laptop (MT7925 role switch stutter).
+# Only for devices that are paired on this machine.
+# ---------------------------------------------------------------------------
+BT_RECONNECT_DEVICES="${BT_RECONNECT_DEVICES:-9C:CD:42:14:69:6B}"
+systemctl --user daemon-reload
+for addr in $BT_RECONNECT_DEVICES; do
+  unit="bt-laptop-initiated-reconnect@${addr//:/_}.service"
+  if command -v bluetoothctl >/dev/null 2>&1 && \
+      bluetoothctl info "$addr" 2>/dev/null | grep -q "Paired: yes"; then
+    if systemctl --user is-enabled --quiet "$unit"; then
+      log "$unit already enabled, restarting to pick up changes."
+      systemctl --user restart "$unit"
+    else
+      log "Enabling $unit..."
+      systemctl --user enable --now "$unit"
+    fi
+  else
+    warn "Bluetooth device $addr is not paired; skipping $unit."
+  fi
+done
 
 # ---------------------------------------------------------------------------
 # Trigger Neovim's plugin install (vim.pack.add in lua/plugins.lua runs

@@ -10,6 +10,11 @@ Dotfiles managed via GNU stow. Directory trees mirror `$HOME` (e.g. `vim/.config
 - Language-specific ftplugins: `vim/.config/nvim/ftplugin/*.vim`
 - Stale plugins auto-removed on `VimEnter`.
 
+## Bluetooth
+
+- `bluetooth/` is stowed with `--no-folding`, so `~/.config/systemd/user/` and `~/.config/wireplumber/` stay real directories.
+- `bt-laptop-initiated-reconnect@<address>.service` reconnects a device from the laptop when the device starts the connection (MT7925 role switch stutter). `install.sh` enables it for the paired devices in `BT_RECONNECT_DEVICES`.
+
 ## OpenCode config
 
 - `opencode/.config/opencode/opencode.json` — model, provider, permissions, compaction
