@@ -26,6 +26,9 @@ plugins+=(
 
 source $ZSH/oh-my-zsh.sh
 
+# local.sh can add the aws plugin. Without the plugin, show no AWS profile.
+(( $+functions[aws_prompt_info] )) || aws_prompt_info() {}
+
 # User configuration
 
 HISTFILE=~/.histfile
@@ -36,8 +39,9 @@ SAVEHIST=10000
 # Reminder that ^Xu is undo.
 # NOTE: Can add %n@%M is I care about username and hostname.
 PS1='
-%K{236}%F{112}%D{%b %d %H:%M:%S} %f %F{174}%~
+%K{236}%F{112}%D{%b %d %H:%M:%S} %f %F{208}$(aws_prompt_info)%f %F{174}%~
 %k%f^Xu$(git_prompt_info)%B(%h) %# %b'
+RPROMPT=""
 
 # Important for things like git commit.
 export EDITOR=nvim
