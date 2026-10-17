@@ -21,6 +21,17 @@ Dotfiles managed via GNU stow. Directory trees mirror `$HOME` (e.g. `vim/.config
 - `opencode/.config/opencode/AGENTS.md` — global agent rules
 - Sandbox configs under `opencode/.config/opencode-sandbox/`
 
+## Adding a provider
+
+Four files. Pattern per provider:
+
+1. `opencode/.config/opencode/opencode.json` → `provider` block. Built-in providers (anthropic, google) need `"<name>": {}` or nothing. Custom providers need `npm`, `options.baseURL`, `models`.
+2. `opencode/.local/bin/opencode-sandboxed` → read key with `pass show <vendor>/<product>-api-key`, export as `-e <PROVIDER>_API_KEY`.
+3. `opencode/.config/opencode-sandbox/squid.conf` → add API domain to `models_dst` acl.
+4. `README.md` → add `pass insert <vendor>/<product>-api-key`.
+
+Store key in `pass`, restart opencode.
+
 ## Permission rules
 
 See `opencode/.config/opencode/opencode.json` → `permission`. Pre-approved: `git status`, `git diff`, `git log`. All other tool use requires explicit approval.

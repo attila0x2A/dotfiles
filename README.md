@@ -44,6 +44,7 @@ This installs and configures everything. Safe to re-run any time.
    pass init "aiagent@localhost"
    pass insert deepseek/opencode-api-key
    pass insert google/gemini-api-key
+   pass insert anthropic/claude-api-key
    exit
    ```
 
