@@ -1,0 +1,11 @@
+# Instance name: device address with "_" in place of ":",
+# for example bt-laptop-initiated-reconnect@9C_CD_42_14_69_6B.service
+[Unit]
+Description=Reconnect Bluetooth device %I from the laptop to prevent MT7925 audio stutter
+
+[Service]
+ExecStart=%h/.local/bin/bt-laptop-initiated-reconnect %i
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

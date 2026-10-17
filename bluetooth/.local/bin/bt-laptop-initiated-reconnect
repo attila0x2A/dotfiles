@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""Reconnect a Bluetooth device from the laptop when the device starts the connection.
+
+On the MT7925 chip, a connection that the device starts causes a role switch.
+After the role switch the link is slow and A2DP audio stutters. A connection
+that the laptop starts works correctly.
+
+The script waits for the BlueZ "Connected" signal of the device. It does not
+poll. When the device started the connection, the script disconnects the
+device and connects it again from the laptop.
+
+Usage: bt-laptop-initiated-reconnect AA:BB:CC:DD:EE:FF
+"""
+import fcntl
+import socket
+import struct
+import sys
+import time
+
+from gi.repository import Gio, GLib
+
+HCIGETCONNLIST = 0x800448D4
+ACL_LINK = 1
+MAX_TRIES = 3  # per TRY_WINDOW
+TRY_WINDOW = 60  # seconds
+
+address = sys.argv[1].upper().replace("_", ":")
+device_path = "/org/bluez/hci0/dev_" + address.replace(":", "_")
+bus = Gio.bus_get_sync(Gio.BusType.SYSTEM)
+tries = []
+
+
+def log(msg):
+    print(msg, flush=True)
+
+
+def started_by_device():
+    """Return True if the device started the current ACL connection."""
+    s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_RAW, socket.BTPROTO_HCI)
+    try:
+        n = 10
+        buf = bytearray(struct.pack("<HH", 0, n) + b"\0" * 16 * n)
+        fcntl.ioctl(s, HCIGETCONNLIST, buf)
+    finally:
+        s.close()
+    for i in range(struct.unpack_from("<H", buf, 2)[0]):
+        _, addr, link_type, out, _, _ = struct.unpack_from("<H6sBBHI", buf, 4 + 16 * i)
+        if link_type == ACL_LINK and ":".join(f"{b:02X}" for b in reversed(addr)) == address:
+            return not out
+    return False
+
+
+def device_call(method, on_done=None):
+    def finish(conn, res):
+        try:
+            conn.call_finish(res)
+        except GLib.Error as e:
+            log(f"{method} failed: {e.message}")
+        if on_done:
+            on_done()
+
+    bus.call("org.bluez", device_path, "org.bluez.Device1", method, None, None,
+             Gio.DBusCallFlags.NONE, 30000, None, finish)
+
+
+def check_connection():
+    try:
+        remote = started_by_device()
+    except OSError as e:
+        log(f"Cannot read HCI connection list: {e}")
+        return False
+    if not remote:
+        return False
+    now = time.monotonic()
+    tries[:] = [t for t in tries if now - t < TRY_WINDOW]
+    if len(tries) >= MAX_TRIES:
+        log("Device started connection, but the retry limit is reached")
+        return False
+    tries.append(now)
+    log("Device started connection, reconnect from laptop")
+    device_call("Disconnect",
+                lambda: GLib.timeout_add_seconds(2, lambda: device_call("Connect") and False))
+    return False
+
+
+def on_properties_changed(conn, sender, path, iface, signal, params):
+    changed_iface, changed, _ = params.unpack()
+    if changed_iface == "org.bluez.Device1" and changed.get("Connected") is True:
+        check_connection()
+
+
+bus.signal_subscribe(None, "org.freedesktop.DBus.Properties", "PropertiesChanged",
+                     device_path, "org.bluez.Device1", Gio.DBusSignalFlags.NONE,
+                     on_properties_changed)
+log(f"Watch {address}")
+check_connection()
+GLib.MainLoop().run()
