@@ -60,3 +60,7 @@ end, { silent = true })
 vim.keymap.set('n', '<leader>h', require('hop').hint_words, { silent = true })
 vim.keymap.set('n', '<leader>/', ':HopPattern<CR>', { silent = true })
 vim.keymap.set('o', 'h', ':HopWord<CR>', { silent = true })
+
+vim.keymap.set('n', '<leader><CR>', function()
+  vim.fn.chansend(vim.bo.channel, "\r")
+end, { desc = "Send Enter to Terminal" })
