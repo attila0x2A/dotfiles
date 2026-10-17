@@ -47,3 +47,7 @@ vim.cmd([[set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %
 
 vim.opt.equalalways = false
 vim.opt.swapfile = false
+
+vim.g.netrw_preview   = 1
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize   = 30
