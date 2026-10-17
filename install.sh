@@ -65,11 +65,14 @@ require_aur_cmd() {
 # Core tools
 # ---------------------------------------------------------------------------
 require_cmd stow
+require_cmd tmux
 require_cmd nvim neovim
 require_cmd rg ripgrep
 require_cmd fzf
 require_cmd gitleaks
 require_cmd podman podman slirp4netns fuse-overlayfs shadow acl pass gnupg
+require_cmd tree-sitter tree-sitter-cli
+require_cmd xclip
 
 require_aur_cmd caffeine caffeine-ng
 require_aur_cmd google-chrome-stable google-chrome
