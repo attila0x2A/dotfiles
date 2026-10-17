@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# Local only configuration.
+[ -f $HOME/.zsh/local.sh ] && source $HOME/.zsh/local.sh
+
 zstyle ':omz:update' mode disabled
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -14,7 +17,7 @@ ZSH_THEME="candy"
 # git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 # Install fzf.
 
-plugins=(
+plugins+=(
     git
     zsh-autosuggestions
     fzf
@@ -111,8 +114,3 @@ export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --bind 'alt-a:select-all,alt-d:dese
 
 unalias gcm
 alias gcm="git checkout master"
-
-# Local only configuration.
-[ -f $HOME/.zsh/local.sh ] && source $HOME/.zsh/local.sh
-
-
