@@ -18,6 +18,18 @@ fi
 WORKDIR="$(realpath "$TARGET_DIR")"
 echo "Granting $AGENT_USER access to $WORKDIR (mirroring owner permissions)..."
 
+# Every path component from / down to WORKDIR must be traversable, otherwise
+# podman cannot chdir into WORKDIR when opencode-sandbox starts there.
+# Grant traverse-only (x) on each ancestor owned by this user; system dirs
+# are already world-traversable.
+dir="$(dirname "$WORKDIR")"
+while [ "$dir" != "/" ]; do
+    if [ "$(stat -c '%u' "$dir")" = "$(id -u)" ]; then
+        setfacl -m "u:${AGENT_USER}:--x" "$dir"
+    fi
+    dir="$(dirname "$dir")"
+done
+
 # default:user:: permissions are added to make sure that user keeps access
 # to the files created by the agent. Applied to all subdirectories, not just
 # the top-level WORKDIR.
